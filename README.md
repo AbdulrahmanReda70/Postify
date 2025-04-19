@@ -9,8 +9,8 @@ Currently in its early development stage.<br><br>
 
 ## 📘 Table of Contents
 
-- [📸 Screenshots](#screenshots)
-- [🚀 What's Next](#-whats-next)
+- [Screenshots](#screenshots)
+- [What's Next](#-whats-next)
 <br><br><br>
 
 
