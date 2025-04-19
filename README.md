@@ -38,7 +38,7 @@ Currently in its early development stage.<br><br>
 
 ## 🚀 What's Next
 
-- **Implement a caching system** to enhance app performance using **Redux Toolkit** on the frontend and **Redis** on the backend.  
+- **Implement a caching system** using **Redux Toolkit** on the frontend and **Redis** on the backend.  
 - **Add test coverage** for critical parts of the application to ensure reliability and prevent regressions.  
 - **Introduce a comments section** to boost user interaction and engagement.  
 - **Optimize frontend performance** by compressing images and applying the [RAIL Performance Model](https://web.dev/articles/rail).  
