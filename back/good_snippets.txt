@@ -1,0 +1,16 @@
+ $posts = Post::withExists(['savedByUsers as is_saved' => function ($query) {
+            $query->with(['user', 'likes']);
+        }])->latest()->get();
+
+----
+
+ $post = Post::withExists(['likedByUsers as liked'])->find($id);
+
+*Is this Post exist in the pivot table or not?*
+
+- how it good for performance
+- savedByUsers -> this is a function inside the post model to make the pivot table (many to many)
+-----------------------------------------------------------------------------------------------
+
+$postArr = $post->toArray(); // Associative array
+$postArr['likes_count'] = $post->likedByUsers()->count(); //add key+value
