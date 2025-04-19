@@ -32,11 +32,12 @@ This project is built using a modern tech stack, combining a powerful **React** 
 | Zod (Validation)           | Laravel Debugbar          |
 | React Hook Form            | Pest (Testing)            |
 | Material UI (MUI)          | FakerPHP                  |
-| Font Awesome               | Laravel Pint              |
-| Heroicons                  | Mockery                   |
-| Emotion (CSS-in-JS)        | Laravel Sail              |
-| React Icons                | Collision                 |
-| Testing Library (React)    | Laravel Pail              |
+| Font Awesome               |                           |
+| Heroicons                  |                           |
+| Emotion (CSS-in-JS)        |                           |
+| React Icons                |                           |
+| Testing Library (React)    |                           |
+
 
 <br><br>
 
