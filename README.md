@@ -36,7 +36,7 @@ Currently in its early development stage.<br><br>
 | React Icons                |                           |
 | Testing Library (React)    |                           |
 
-<br>>
+<br>
 
 ## Screenshots
 
