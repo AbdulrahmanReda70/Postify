@@ -19,8 +19,6 @@ Currently in its early development stage.<br><br>
 
 ## Technologies Used
 
-This project is built using a modern tech stack, combining a powerful **React** frontend with a robust **Laravel** backend. Here's a breakdown of the main libraries and tools used:
-
 | **Frontend (React)**        | **Backend (Laravel)**     |
 |----------------------------|---------------------------|
 | React 18                   | Laravel 11                |
