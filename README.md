@@ -1,4 +1,4 @@
-> [!WARNING]
+> [!IMPORTANT]
 > **Demo Version:** This project is currently 70% complete and under active development.
 > It may not be fully stable or feature-complete yet. <br>
 
