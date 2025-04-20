@@ -25,7 +25,7 @@ class PostFactory extends Factory
             'title' => $this->faker->title,
             'body' => $this->faker->paragraph,
             'image' => 'posts/e1bIXNMK1TdwaWqsR9Av9aU1db99P2KpFHJ4n6lt.jpg',
-            'created_at' => $this->faker->time,
+            'created_at' => '2025-04-01 21:21:04',
             'updated_at' => $this->faker->time,
         ];
     }

@@ -7,6 +7,7 @@ import AlertDialog from "../components/AlertDialog";
 import { RiHeartAdd2Fill, RiHeartAdd2Line } from "react-icons/ri";
 import Skeleton from "@mui/material/Skeleton";
 import { motion } from "framer-motion";
+import { usePosts } from "../context/PostsContext";
 
 function PostEdit() {
   const [title, setTitle] = useState("");
@@ -19,6 +20,7 @@ function PostEdit() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const { setCanFetch, setHomePosts } = usePosts();
 
   const location = useLocation();
   const prev_page = location.state.from;
@@ -109,6 +111,8 @@ function PostEdit() {
       setRes({ error: true, message: response.message });
     } else {
       setRes({ error: false, message: response.data.message });
+      setHomePosts([]);
+      setCanFetch(true);
       setTimeout(() => {
         navigate(prev_page, { replace: true });
       }, 1200);

@@ -3,14 +3,15 @@ import Skeleton from "@mui/material/Skeleton";
 function HomeSkeleton() {
   return (
     <div>
-      <div className="flex items-center flex-row-reverse ">
-        <Skeleton
-          variant="rectangular"
-          width={230}
-          height={40}
-          className="mb-4 rounded"
-        />
+      <div className="flex items-center  ">
+        <Skeleton variant="rounded" width={230} height={40} />
       </div>
+      <Skeleton
+        variant="rectangular"
+        width={150}
+        height={40}
+        className="mb-[20px] mt-[20px] rounded"
+      />
 
       {[...Array(3)].map((_, index) => (
         <div key={index}>
