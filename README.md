@@ -1,6 +1,9 @@
 > [!IMPORTANT]
 > **Demo Version:** This project is currently 70% complete and under active development.
-> It may not be fully stable or feature-complete yet. <br>
+> It may not be fully stable or feature-complete yet.<br> <br>
+> *Initial release* 
+>  <br>
+
 
 # ![robot](https://github.com/user-attachments/assets/9b32a962-6b4d-4b90-bfc5-0a004ee0e04f) Content Management System
 
