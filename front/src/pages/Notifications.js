@@ -12,7 +12,7 @@ function Notifications() {
     async function fetchNotifications() {
       try {
         const response = await fetch_u(
-          "https://51f1-154-178-190-155.ngrok-free.app/api/notifications",
+          "http://localhost:8000/api/notifications",
           "GET"
         );
 

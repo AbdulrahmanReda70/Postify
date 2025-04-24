@@ -41,7 +41,7 @@ function SignUp() {
     }
 
     let { response, data } = await signup(
-      "https://51f1-154-178-190-155.ngrok-free.app/api/register",
+      "http://localhost:8000/api/register",
       {
         username,
         password,

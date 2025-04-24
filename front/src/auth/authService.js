@@ -77,7 +77,7 @@ export async function signup(url, credentials) {
 
 export async function handleGoogleAuth(e) {
   e.preventDefault();
-  fetch("https://51f1-154-178-190-155.ngrok-free.app/api/googleAuth", {
+  fetch("http://localhost:8000/api/googleAuth", {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

@@ -17,7 +17,7 @@ function History() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("https://51f1-154-178-190-155.ngrok-free.app/api/user_posts");
+      let res = await fetch_u("http://localhost:8000/api/user_posts");
       if (!res.error) {
         setHistoryPosts(res.data.posts);
         setLikesCount(res.data.likes_count);

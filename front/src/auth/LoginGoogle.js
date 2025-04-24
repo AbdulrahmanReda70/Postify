@@ -5,7 +5,7 @@ const LoginGoogle = () => {
   const handleSuccess = async (response) => {
     try {
       const res = await fetch(
-        "https://51f1-154-178-190-155.ngrok-free.app/api/auth/google/callback",
+        "http://localhost:8000/api/auth/google/callback",
         {
           method: "POST",
           headers: {

@@ -17,7 +17,7 @@ export default function VisitedUser() {
       try {
         // Fetch user details
         const res = await fetch_u(
-          `https://51f1-154-178-190-155.ngrok-free.app/api/visited_user/${visitedUserId}`,
+          `http://localhost:8000/api/visited_user/${visitedUserId}`,
           "GET"
         );
         if (!res.error) {
