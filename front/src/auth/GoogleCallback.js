@@ -11,7 +11,7 @@ function GoogleCallback() {
   const nav = useNavigate();
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/auth/callback${location.search}`, {
+    fetch(`https://51f1-154-178-190-155.ngrok-free.app/api/auth/callback${location.search}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

@@ -41,7 +41,7 @@ function PostEdit() {
 
     try {
       let res = await fetch_u(
-        `http://127.0.0.1:8000/api/like_post/${postId}`,
+        `https://51f1-154-178-190-155.ngrok-free.app/api/like_post/${postId}`,
         "POST"
       );
       if (!res.data.liked) {
@@ -59,7 +59,7 @@ function PostEdit() {
   useEffect(() => {
     async function getPost() {
       let res = await fetch_u(
-        `http://127.0.0.1:8000/api/post_action/${postId}`
+        `https://51f1-154-178-190-155.ngrok-free.app/api/post_action/${postId}`
       );
 
       setTitle(res.data.title);
@@ -87,7 +87,7 @@ function PostEdit() {
     }
 
     let response = await fetch_u(
-      `http://127.0.0.1:8000/api/update_post/${postId}`,
+      `https://51f1-154-178-190-155.ngrok-free.app/api/update_post/${postId}`,
       "POST",
       formData
     );
@@ -103,7 +103,7 @@ function PostEdit() {
   async function handlePostDelete() {
     close_confirm();
     let response = await fetch_u(
-      `http://127.0.0.1:8000/api/delete_post/${postId}`,
+      `https://51f1-154-178-190-155.ngrok-free.app/api/delete_post/${postId}`,
       "DELETE"
     );
 
@@ -125,7 +125,7 @@ function PostEdit() {
 
     try {
       let res = await fetch_u(
-        `http://127.0.0.1:8000/api/like_post/${postId}`,
+        `https://51f1-154-178-190-155.ngrok-free.app/api/like_post/${postId}`,
         "POST"
       );
       if (!res.data.liked) {
@@ -207,7 +207,7 @@ function PostEdit() {
         <div className="flex justify-center mb-8">
           <img
             className="h-[500px] w-[100%] rounded object-cover"
-            src={preview ? preview : `http://127.0.0.1:8000/storage/${image}`}
+            src={preview ? preview : `https://51f1-154-178-190-155.ngrok-free.app/storage/${image}`}
             alt="img"
           />
         </div>

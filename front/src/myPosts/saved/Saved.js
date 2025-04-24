@@ -8,7 +8,7 @@ function Saved() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://127.0.0.1:8000/api/saved_posts");
+      let res = await fetch_u("https://51f1-154-178-190-155.ngrok-free.app/api/saved_posts");
       if (!res.error) {
         setSavedPosts(res.data.posts);
       }

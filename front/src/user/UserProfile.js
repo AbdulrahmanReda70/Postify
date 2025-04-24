@@ -30,7 +30,7 @@ function UserProfile() {
     if (conf) {
       try {
         const res = await fetch_u(
-          "http://127.0.0.1:8000/api/user_delete",
+          "https://51f1-154-178-190-155.ngrok-free.app/api/user_delete",
           "DELETE"
         );
 
@@ -64,7 +64,7 @@ function UserProfile() {
 
   // Function to update the description on the server
   const updateDescription = async (newDescription) => {
-    const res = await fetch_u("http://127.0.0.1:8000/api/user_update", "POST", {
+    const res = await fetch_u("https://51f1-154-178-190-155.ngrok-free.app/api/user_update", "POST", {
       description: newDescription,
     });
 

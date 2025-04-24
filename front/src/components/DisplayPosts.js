@@ -27,7 +27,7 @@ function DisplayPosts({ posts = [], loading, pageTitle, type, setPosts }) {
 
     try {
       let res = await fetch_u(
-        `http://127.0.0.1:8000/api/save_post/${postId}`,
+        `https://51f1-154-178-190-155.ngrok-free.app/api/save_post/${postId}`,
         "POST"
       );
       if (res.data.saved) {
@@ -110,7 +110,7 @@ function DisplayPosts({ posts = [], loading, pageTitle, type, setPosts }) {
                   </div>
                 </div>
                 <img
-                  src={`http://127.0.0.1:8000/storage/${post.image}`}
+                  src={`https://51f1-154-178-190-155.ngrok-free.app/storage/${post.image}`}
                   alt=""
                   className="w-[150px] min-w-[150px] h-[140px] object-cover"
                 />

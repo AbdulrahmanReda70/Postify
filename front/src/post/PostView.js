@@ -16,7 +16,7 @@ function PostView() {
     async function getPost() {
       try {
         const res = await fetch_u(
-          `http://127.0.0.1:8000/api/post_view/${post_id}`
+          `https://51f1-154-178-190-155.ngrok-free.app/api/post_view/${post_id}`
         );
         setPost(res.data);
         setLikesCount(res.data.likes_count);
@@ -34,7 +34,7 @@ function PostView() {
 
     try {
       let res = await fetch_u(
-        `http://127.0.0.1:8000/api/like_post/${postId}`,
+        `https://51f1-154-178-190-155.ngrok-free.app/api/like_post/${postId}`,
         "POST"
       );
       if (!res.data.liked) {
@@ -75,7 +75,7 @@ function PostView() {
       <div className="flex justify-center mb-8">
         <img
           className="h-[500px] w-[100%] rounded object-cover"
-          src={`http://127.0.0.1:8000/storage/${post?.image}`}
+          src={`https://51f1-154-178-190-155.ngrok-free.app/storage/${post?.image}`}
           alt="img"
         />
       </div>

@@ -15,7 +15,7 @@ function Protected() {
 
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/auth/validate",
+          "https://51f1-154-178-190-155.ngrok-free.app/api/auth/validate",
           {
             headers: {
               "Content-Type": "application/json",

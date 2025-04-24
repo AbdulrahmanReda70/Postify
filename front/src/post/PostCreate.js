@@ -23,7 +23,7 @@ function PostCreate() {
     }
 
     let response = await fetch_u(
-      "http://127.0.0.1:8000/api/create_post",
+      "https://51f1-154-178-190-155.ngrok-free.app/api/create_post",
       "POST",
       formData,
       true

@@ -38,7 +38,7 @@ function ModalF(modalOpen, setModalOpen, title, setUser) {
       return null;
     }
 
-    const res = await fetch_u("http://127.0.0.1:8000/api/user_update", "POST", {
+    const res = await fetch_u("https://51f1-154-178-190-155.ngrok-free.app/api/user_update", "POST", {
       [field]: value,
     });
 

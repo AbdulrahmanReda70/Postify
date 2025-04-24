@@ -54,7 +54,7 @@ function Home() {
   async function handleSearch(e) {
     handleShow();
     let value = e.target.value;
-    let res = await fetch_u(`http://127.0.0.1:8000/api/search?query=${value}`);
+    let res = await fetch_u(`https://51f1-154-178-190-155.ngrok-free.app/api/search?query=${value}`);
     console.log("==", res);
     if (!res.error) {
       const posts = res.data.data;
@@ -78,7 +78,7 @@ function Home() {
     async function getPosts() {
       setLoading(true);
       let res = await fetch_u(
-        `http://127.0.0.1:8000/api/home_posts?page=${homeCurrentPage}`
+        `https://51f1-154-178-190-155.ngrok-free.app/api/home_posts?page=${homeCurrentPage}`
       );
       if (!res.error) {
         const posts = res.data.posts.data;
@@ -128,7 +128,7 @@ function Home() {
                       className="flex gap-2 items-center mb-4"
                     >
                       <img
-                        src={`http://127.0.0.1:8000/storage/${post.image}`}
+                        src={`https://51f1-154-178-190-155.ngrok-free.app/storage/${post.image}`}
                         alt=""
                         className="rounded-full w-6 h-6"
                       />
