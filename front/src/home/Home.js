@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import DisplayPosts from "../components/DisplayPosts";
+import DisplayHomePosts from "../components/displayPosts/DisplayHomePosts";
 import { fetch_u } from "../utility/fetch";
 import { CiSearch } from "react-icons/ci";
 import { usePosts } from "../context/PostsContext";
@@ -39,22 +39,26 @@ function Home() {
   }, []);
 
   const {
-    canFetch,
-    setCanFetch,
-    homePosts,
-    setHomePosts,
+    AllPosts,
+    setAllPosts,
+
     loadHomePosts,
     setLoadHomePosts,
     homeCurrentPage,
     setHomeCurrentPage,
     homeLastPage,
+    hasFetchedHomePosts,
+    setHasFetchedHomePosts,
     setHomeLastPage,
   } = usePosts();
 
   async function handleSearch(e) {
+    console.log(e.target.value);
     handleShow();
     let value = e.target.value;
-    let res = await fetch_u(`http://localhost:8000/api/search?query=${value}`);
+    let res = await fetch_u(
+      `http://localhost:8000/api/posts/search?query=${value}`
+    );
     console.log("==", res);
     if (!res.error) {
       const posts = res.data.data;
@@ -65,92 +69,106 @@ function Home() {
     }
   }
 
+  function renderSearchInput() {
+    return (
+      <div className="flex border-solid border-[1px] flex-row-reverse w-[230px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative">
+        <input
+          onChange={handleSearch}
+          placeholder="Search"
+          className="border-none w-[100%] h-[100%] mb-0 outline-none"
+          autoComplete="off"
+        />
+        <CiSearch className="text-gray-400 size-5" />
+        {isVisible && (
+          <div
+            ref={searchRef}
+            className="absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[280px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20"
+          >
+            <h3 className="border-b-[1px] pb-1 mb-4 text-gray-400">Posts</h3>
+            {searchPosts.map((post, index) => {
+              return (
+                <Link
+                  to={`/view/${post.id}`}
+                  key={index}
+                  className="flex gap-2 items-center mb-4"
+                >
+                  <img
+                    src={`http://localhost:8000/storage/${post.image}`}
+                    alt=""
+                    className="rounded-full w-6 h-6"
+                  />
+                  <div>{post.title}</div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   useEffect(() => {
     console.log(homeLastPage);
 
     if (isInView && !loading && homeCurrentPage < homeLastPage) {
       setHomeCurrentPage((prev) => prev + 1);
-      setCanFetch(true);
+      setHasFetchedHomePosts(false);
     }
-  }, [isInView]);
-
+  }, [
+    hasFetchedHomePosts,
+    homeCurrentPage,
+    homeLastPage,
+    loading,
+    setHasFetchedHomePosts,
+    setHomeCurrentPage,
+    isInView,
+  ]);
   useEffect(() => {
     async function getPosts() {
+      console.log("HOME", AllPosts);
+
       setLoading(true);
       let res = await fetch_u(
-        `http://localhost:8000/api/home_posts?page=${homeCurrentPage}`
+        `http://localhost:8000/api/posts/home?page=${homeCurrentPage}`
       );
       if (!res.error) {
         const posts = res.data.posts.data;
         const lastPage = res.data.posts.last_page;
+        const isFirstTime =
+          AllPosts.home.allIds.length === 0 ? {} : AllPosts.home.byId;
+        setAllPosts((p) => {
+          const homePosts = posts.reduce((acc, post) => {
+            acc[post.id] = post;
 
-        setHomePosts((p) => [...p, ...posts]);
+            AllPosts.home.allIds.push(post.id);
+            return acc;
+          }, isFirstTime);
+
+          const home = AllPosts.home;
+
+          const newById = { ...homePosts };
+          const newHome = { ...home, byId: newById };
+          return { ...p, home: newHome };
+        });
+
+        // setHomePosts((p) => [...p, ...posts]);
         setHomeLastPage(lastPage);
       }
       setLoadHomePosts(false);
       setLoading(false);
+      setHasFetchedHomePosts(true);
     }
-
-    if (canFetch) {
+    if (!hasFetchedHomePosts) {
       getPosts();
-      setCanFetch(false);
     }
-  }, [homeCurrentPage, canFetch]);
+  }, [homeCurrentPage]);
 
   return (
     <div className="container-c">
-      <div></div>
-
-      {homePosts.length !== 0 && (
-        <div className=" items-center ">
-          <div className="flex border-solid border-[1px] flex-row-reverse w-[230px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative">
-            <input
-              onChange={handleSearch}
-              placeholder="Search"
-              className="border-none w-[100%] h-[100%] mb-0 outline-none"
-              autoComplete="off"
-            />
-            <CiSearch className="text-gray-400 size-5" />
-            {isVisible && (
-              <div
-                ref={searchRef}
-                className="absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[280px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20"
-              >
-                <h3 className="border-b-[1px] pb-1 mb-4 text-gray-400">
-                  Posts
-                </h3>
-
-                {searchPosts.map((post, index) => {
-                  return (
-                    <Link
-                      to={`/view/${post.id}`}
-                      key={index}
-                      className="flex gap-2 items-center mb-4"
-                    >
-                      <img
-                        src={`http://localhost:8000/storage/${post.image}`}
-                        alt=""
-                        className="rounded-full w-6 h-6"
-                      />
-                      <div>{post.title}</div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {renderSearchInput()}
       <div className="w-[100%]">
-        <DisplayPosts
-          setPosts={setHomePosts}
-          loading={loadHomePosts}
-          posts={homePosts}
-          type={"view"}
-          pageTitle={"Home"}
-        />
+        <DisplayHomePosts  type={"view"} />
       </div>
-
       <div ref={ref} style={{ height: 20, background: "transparent" }}></div>
     </div>
   );

@@ -2,30 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Like;
+use Laravel\Telescope\Telescope;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log as FacadesLog;
 use Illuminate\Support\Facades\Storage;
-use PDO;
+use Intervention\Image\Facades\Image;
+use PgSql\Lob;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function get_user_posts()
+    public function first_post()
     {
+        $post = Post::with('user')->withExists(['savedByUsers as is_saved' => fn($q) => $q->where('user_id', Auth::id())])->where('is_hero', true)->latest()->first();
+        $postArr = $post->toArray();
+        // $postArr['likes_count'] = $post->likedByUsers()->count();
+        $postArr['section'] = 'home';
+        $postArr['is_first_post'] = true;
 
+
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+        return response()->json([
+            'post' => $postArr
+        ], 200);
+    }
+
+    public function getUserPosts()
+    {
         $posts = Post::where('user_id', Auth::user()->id)->withExists('savedByUsers as is_saved')->latest()->get();
-
+        foreach ($posts as $p) {
+            $p['section'] = 'history';
+        }
         return response()->json([
             'posts' => $posts
         ], 200);
     }
 
-    public function get_saved_posts()
+    public function getSavedPosts()
     {
         $posts = Auth::user()->savedPosts()->with('user')->latest()->get();
 
@@ -35,7 +56,7 @@ class PostController extends Controller
         ], 200);
     }
 
-    public function get_post_view($id)
+    public function getPost($id)
     {
         //find($id)
         $post = Post::withExists(['likedByUsers as liked'])->find($id);
@@ -48,7 +69,7 @@ class PostController extends Controller
         return response()->json($postArr);
     }
 
-    public function get_post_edit($id)
+    public function getUserPost($id)
     {
 
         // $post = Post::where('id', $id)
@@ -64,29 +85,44 @@ class PostController extends Controller
         return response()->json($postArr);
     }
 
-    public function get_home_posts()
+    public function getHomePosts()
     {
 
-        $start = microtime(true);
+        $page = request()->get('page', 1);
 
-        $home_posts = Post::with('user')->withExists(['savedByUsers as is_saved' => fn($q) => $q->where('user_id', Auth::id())])->latest()->paginate(5);
+        $home_posts = Post::with('user')
+            ->withExists([
+                'savedByUsers as is_saved' => fn($q) => $q->where('user_id', Auth::id())
+            ])
+            ->latest()
+            ->paginate(5);
+
+
+        $posts = $home_posts->getCollection()->slice(1)->values();
+        foreach ($posts as $p) {
+            $p['section'] = 'home';
+        }
+
+        $home_posts = $home_posts->setCollection($posts);
+
+        Log::info($home_posts);
+
+
         // $saved_posts = Auth::user()->savedPosts()->pluck('post_id'); // just get saved post IDs
 
         // foreach ($home_posts as $post) {
         //     $post->is_saved = $saved_posts->contains($post->id);
         // }
 
-        if (count($home_posts) <= 0 && $home_posts) {
-            return response()->json(['message' => 'no Posts found'], 404);
-        }
-        $end = microtime(true);
+        // if ($home_posts->isEmpty()) {
+        //     return response()->json(['message' => 'no Posts found'], 404);
+        // }
 
-        $executionTime = $end - $start;
-        return response()->json(['posts' => $home_posts, 'executionTime' => $executionTime], 200);
+        return response()->json(['posts' => $home_posts], 200);
     }
 
 
-    public function create_post(Request $request)
+    public function store(Request $request)
     {
 
         request()->validate([
@@ -97,11 +133,61 @@ class PostController extends Controller
         $user_id = Auth::user()->id;
         $title = request()->title;
         $body = request()->body;
-
         $imagePath = null;
+
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 'public');
+            // Get the uploaded image
+            $image = $request->file('image');
+
+            // Create an image resource from the uploaded image (depending on the file type)
+            $img = imagecreatefromstring(file_get_contents($image));
+
+            // Get original dimensions
+            $originalWidth = imagesx($img);
+            $originalHeight = imagesy($img);
+
+            // Resize image to fit within 150x140 while maintaining aspect ratio
+            $targetWidth = 300;
+            $targetHeight = 280;
+
+            // Calculate aspect ratio
+            $aspectRatio = $originalWidth / $originalHeight;
+
+            if ($originalWidth > $originalHeight) {
+                $newWidth = $targetWidth;
+                $newHeight = round($targetWidth / $aspectRatio);
+            } else {
+                $newHeight = $targetHeight;
+                $newWidth = round($targetHeight * $aspectRatio);
+            }
+
+            // Create a new true color image with the target dimensions
+            $resizedImg = imagecreatetruecolor($newWidth, $newHeight);
+
+            // Preserve transparency (if applicable)
+            if (imagesavealpha($img, true)) {
+                imagealphablending($resizedImg, false);
+                imagesavealpha($resizedImg, true);
+            }
+
+            // Copy and resize the original image into the resized image
+            imagecopyresampled($resizedImg, $img, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
+
+            // Define the path for saving the WebP image
+            $webpPath = public_path('storage/posts/' . uniqid() . '.webp');
+
+            // Save the resized image as WebP with better quality
+            $quality = 90; // Adjust this value between 0 and 100 for better quality (higher means better quality)
+            imagewebp($resizedImg, $webpPath, $quality);
+
+            // Free up memory
+            imagedestroy($img);
+            imagedestroy($resizedImg);
+
+            // Save the relative path to the WebP image
+            $imagePath = 'posts/' . basename($webpPath);
         }
+
 
         $post = Post::create([
             'user_id' => $user_id,
@@ -122,13 +208,13 @@ class PostController extends Controller
         }
     }
 
-    public function update_post(Post $post)
+    public function update(Post $post)
     {
 
         request()->validate([
             'title' => 'required|min:5|string',
             'body' => 'required|min:20|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // Max size 2MB
+            // 'image' => 'nullable|image|max:2048' // Max size 2MB
         ]);
 
         $title = request()->title;
@@ -141,13 +227,18 @@ class PostController extends Controller
             if ($last_path) {
                 Storage::disk('public')->delete($last_path);
             }
+            $post->update([
+                'title' => $title,
+                'body' => $body,
+                'image' =>  $imagePath
+            ]);
+        } else {
+            $post->update([
+                'title' => $title,
+                'body' => $body,
+            ]);
         }
 
-        $post->update([
-            'title' => $title,
-            'body' => $body,
-            'image' =>  $imagePath
-        ]);
         return response()->json([
             'message' => 'Post updated successfully!',
             'post' => $post
@@ -164,7 +255,7 @@ class PostController extends Controller
         }
     }
 
-    public function delete_post(Post $post)
+    public function delete(Post $post)
     {
         if ($post) {
             $post->delete();
@@ -179,7 +270,7 @@ class PostController extends Controller
         }
     }
 
-    public function post_search()
+    public function postSearch()
     {
         $query = request()->input('query');
 

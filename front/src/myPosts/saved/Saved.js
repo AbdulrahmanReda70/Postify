@@ -1,28 +1,51 @@
 import React, { useEffect } from "react";
 import { fetch_u } from "../../utility/fetch";
-import DisplayPosts from "../../components/DisplayPosts";
 import { usePosts } from "../../context/PostsContext";
+import DisplayMyPosts from "../../components/displayPosts/DisplayMyPosts";
 function Saved() {
-  const { savedPosts, setSavedPosts, loadSavedPosts, setLoadSavedPosts } =
+  const { loadSavedPosts, setLoadSavedPosts, AllPosts, setAllPosts } =
     usePosts();
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://localhost:8000/api/saved_posts");
+      let res = await fetch_u("http://localhost:8000/api/user/posts/saved");
       if (!res.error) {
-        setSavedPosts(res.data.posts);
+        const posts = res.data.posts;
+
+        setAllPosts((p) => {
+          const savedPosts = posts.reduce((acc, post) => {
+            acc[post.id] = post;
+            AllPosts.saved.allIds.push(post.id);
+            return acc;
+          }, {});
+
+          const saved = AllPosts.saved;
+          const newById = { ...savedPosts };
+          const newSaved = { ...saved, byId: newById };
+          return { ...p, saved: newSaved };
+        });
       }
       setLoadSavedPosts(false);
     }
     getPosts();
+
+    return () =>
+      setAllPosts((p) => {
+        return {
+          ...p,
+          saved: {
+            byId: {},
+            allIds: [],
+          },
+        };
+      });
   }, []);
   // console.log(posts);
   return (
     <div className="container-c">
-      <DisplayPosts
+      <DisplayMyPosts
         loading={loadSavedPosts}
         pageTitle={"Saved"}
-        posts={savedPosts}
         type={"view"}
       />
     </div>

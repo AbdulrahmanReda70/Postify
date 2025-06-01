@@ -48,9 +48,9 @@ input:-webkit-autofill {
     -webkit-text-fill-color: white !important;
     transition: background-color 5000s ease-in-out 0s;
   }
-  
-  
-  
+
+
+
 
 
 button {
@@ -64,22 +64,22 @@ button {
     scrollbar-width: thin; /* For Firefox */
     scrollbar-color: #555 #222; /* Thumb and Track color */
   }
-  
+
   /* WebKit (Chrome, Edge, Safari) */
   .custom-scroll-bar::-webkit-scrollbar {
     width: 8px;
   }
-  
+
   .custom-scroll-bar::-webkit-scrollbar-track {
     background: #222; /* Dark background */
     border-radius: 4px;
   }
-  
+
   .custom-scroll-bar::-webkit-scrollbar-thumb {
     background: #555; /* Dark gray thumb */
     border-radius: 4px;
   }
-  
+
   .custom-scroll-bar::-webkit-scrollbar-thumb:hover {
     background: #777; /* Lighter gray on hover */
   }
@@ -116,4 +116,55 @@ button {
 
 .not-found-container a:hover {
   background-color: #0056b3;
+}
+
+
+.preload-spinner-container {
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed;
+  inset: 0; /* Covers the whole screen */
+  display: flex;
+  flex-direction: column; /* Stack spinner and text vertically */
+  align-items: center;
+  justify-content: center;
+  background: #1b1c1d; /* Or your app's background */
+  z-index: 9999;
+  color: white;
+}
+
+.preload-spinner {
+  /* Tailwind: h-16 w-16 */
+  height: 4rem; /* 64px */
+  width: 4rem; /* 64px */
+
+  /* Tailwind: rounded-full border-t-4 border-blue-500 border-solid */
+  border-radius: 50%;
+  border-width: 4px; /* border-t-4 applies to top, but we need width everywhere for a spinner */
+  border-style: solid;
+  border-color: transparent; /* Make other borders transparent */
+  border-top-color: #3b82f6; /* Tailwind: border-blue-500 */
+
+
+  /* Tailwind: animate-spin */
+  animation: spin 1s linear infinite;
+}
+
+.preload-spinner-text {
+   /* Tailwind: text-lg font-semibold */
+   margin-top: 1rem; /* Add some space */
+   color: white; /* Adjust color as needed */
+   font-size: 1.125rem /* 18px */;
+   line-height: 1.75rem /* 28px */;
+   font-weight: 600;
+  }
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

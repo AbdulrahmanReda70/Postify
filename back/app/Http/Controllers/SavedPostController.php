@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SavedPostController extends Controller
 {
-    public function toggleSavedPost(Post $post)
+    public function toggle(Post $post)
     {
         $user = Auth::user();
         $user_id = $user->id;

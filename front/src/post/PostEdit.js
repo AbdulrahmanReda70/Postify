@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { fetch_u } from "../utility/fetch";
 import { TextareaAutosize } from "@mui/material";
-import AlertPopup from "../components/AlertPopup";
-import AlertDialog from "../components/AlertDialog";
+import AlertPopup from "../components/popup/AlertPopup";
+import AlertDialog from "../components/popup/AlertDialog";
 import { RiHeartAdd2Fill, RiHeartAdd2Line } from "react-icons/ri";
 import Skeleton from "@mui/material/Skeleton";
 import { motion } from "framer-motion";
@@ -20,7 +20,7 @@ function PostEdit() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const { setCanFetch, setHomePosts } = usePosts();
+  const { setHomePosts, updatePost, AllPosts } = usePosts();
 
   const location = useLocation();
   const prev_page = location.state.from;
@@ -41,7 +41,7 @@ function PostEdit() {
 
     try {
       let res = await fetch_u(
-        `http://localhost:8000/api/like_post/${postId}`,
+        `http://localhost:8000/api/posts/${postId}/like`,
         "POST"
       );
       if (!res.data.liked) {
@@ -58,9 +58,7 @@ function PostEdit() {
 
   useEffect(() => {
     async function getPost() {
-      let res = await fetch_u(
-        `http://localhost:8000/api/post_action/${postId}`
-      );
+      let res = await fetch_u(`http://localhost:8000/api/user/posts/${postId}`);
 
       setTitle(res.data.title);
       setBody(res.data.body);
@@ -81,13 +79,16 @@ function PostEdit() {
     let formData = new FormData();
     formData.append("title", title);
     formData.append("body", body);
+    formData.append("_method", "PATCH");
+
+    console.log(formData, "formData");
 
     if (image || preview) {
       formData.append("image", image);
     }
 
     let response = await fetch_u(
-      `http://localhost:8000/api/update_post/${postId}`,
+      `http://localhost:8000/api/posts/${postId}`,
       "POST",
       formData
     );
@@ -95,6 +96,13 @@ function PostEdit() {
     if (response.error) {
       setRes({ error: true, message: response.message });
     } else {
+      const updatedPost = response.data.post;
+
+      console.log("BEFORE", AllPosts);
+
+      updatePost(updatedPost);
+
+      console.log("AFTER", AllPosts);
       setRes({ error: false, message: response.data.message });
     }
     setIs_open(true);
@@ -103,7 +111,7 @@ function PostEdit() {
   async function handlePostDelete() {
     close_confirm();
     let response = await fetch_u(
-      `http://localhost:8000/api/delete_post/${postId}`,
+      `http://localhost:8000/api/posts/${postId}`,
       "DELETE"
     );
 
@@ -112,28 +120,11 @@ function PostEdit() {
     } else {
       setRes({ error: false, message: response.data.message });
       setHomePosts([]);
-      setCanFetch(true);
       setTimeout(() => {
         navigate(prev_page, { replace: true });
       }, 1200);
     }
     setIs_open(true);
-  }
-
-  async function handelPostLike() {
-    setLike((p) => !p);
-
-    try {
-      let res = await fetch_u(
-        `http://localhost:8000/api/like_post/${postId}`,
-        "POST"
-      );
-      if (!res.data.liked) {
-        setLike(false);
-      }
-    } catch (error) {
-      console.log("+_+_+", error);
-    }
   }
 
   if (!title) {

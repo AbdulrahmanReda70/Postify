@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AlertPopup from "../components/AlertPopup";
+import AlertPopup from "../components/popup/AlertPopup";
 import { fetch_u } from "../utility/fetch";
 
 function Notifications() {

@@ -10,10 +10,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "buglinjo/laravel-webp": "^3.1",
+        "intervention/image": "^3.11",
+        "intervention/image-laravel": "^1.5",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.18",
-        "laravel/tinker": "^2.9"
+        "laravel/telescope": "^5.7",
+        "laravel/tinker": "^2.9",
+        "spatie/laravel-image-optimizer": "^1.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

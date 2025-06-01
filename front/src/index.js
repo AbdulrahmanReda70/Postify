@@ -1,7 +1,8 @@
+import "./app.css";
+import "./tailwind.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import "./tailwind.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { HomePostsProvider } from "./context/PostsContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";

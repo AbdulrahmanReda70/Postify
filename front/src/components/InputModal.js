@@ -3,12 +3,11 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Stack from "@mui/material/Stack";
 import { fetch_u } from "../utility/fetch";
 import { saveUserInfo } from "../auth/authService";
-import AlertPopup from "./AlertPopup";
+import AlertPopup from "./popup/AlertPopup";
 
 export default function InputModal({ modalOpen, setModalOpen, from, setUser }) {
   function renderModalContent() {
@@ -38,7 +37,7 @@ function ModalF(modalOpen, setModalOpen, title, setUser) {
       return null;
     }
 
-    const res = await fetch_u("http://localhost:8000/api/user_update", "POST", {
+    const res = await fetch_u("http://localhost:8000/api/user", "PATCH", {
       [field]: value,
     });
 

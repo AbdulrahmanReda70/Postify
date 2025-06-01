@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { fetch_u } from "../../utility/fetch";
-import DisplayPosts from "../../components/DisplayPosts";
+import DisplayMyPosts from "../../components/displayPosts/DisplayMyPosts";
 import { useLocation } from "react-router";
 import { usePosts } from "../../context/PostsContext";
 function History() {
-  const {
-    historyPosts,
-    setHistoryPosts,
-    loadHistoryPosts,
-    setLoadHistoryPosts,
-  } = usePosts();
+  const { AllPosts, setAllPosts, loadHistoryPosts, setLoadHistoryPosts } =
+    usePosts();
   const [likesCount, setLikesCount] = useState(null);
 
   const loc = useLocation();
@@ -17,23 +13,47 @@ function History() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://localhost:8000/api/user_posts");
+      let res = await fetch_u("http://localhost:8000/api/user/posts");
       if (!res.error) {
-        setHistoryPosts(res.data.posts);
+        const posts = res.data.posts;
+        // setHistoryPosts(posts);
         setLikesCount(res.data.likes_count);
+
+        setAllPosts((p) => {
+          const historyPosts = posts.reduce((acc, post) => {
+            acc[post.id] = post;
+            AllPosts.history.allIds.push(post.id);
+            return acc;
+          }, {});
+
+          const history = AllPosts.history;
+          const newById = { ...historyPosts };
+          const newHistory = { ...history, byId: newById };
+          return { ...p, history: newHistory };
+        });
       }
 
       setLoadHistoryPosts(false);
     }
     getPosts();
+
+    return () =>
+      setAllPosts((p) => {
+        return {
+          ...p,
+          history: {
+            byId: {},
+            allIds: [],
+          },
+        };
+      });
   }, []);
   return (
     <div className="container-c">
-      <DisplayPosts
-        setPosts={setHistoryPosts}
+      <DisplayMyPosts
         loading={loadHistoryPosts}
         pageTitle={"History"}
-        posts={historyPosts}
+        posts={AllPosts.history}
         type={"edit"}
       />
     </div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { fetch_u } from "../utility/fetch";
-import DisplayPosts from "../components/DisplayPosts";
+import DisplayHomePosts from "../components/displayPosts/DisplayHomePosts";
+import DisplayVisitedUserPosts from "../components/displayPosts/DisplayVisitedUserPosts";
 
 export default function VisitedUser() {
   const { visitedUserId } = useParams(); // Get the user ID from the URL
@@ -17,7 +18,7 @@ export default function VisitedUser() {
       try {
         // Fetch user details
         const res = await fetch_u(
-          `http://localhost:8000/api/visited_user/${visitedUserId}`,
+          `http://localhost:8000/api/users/${visitedUserId}`,
           "GET"
         );
         if (!res.error) {
@@ -55,7 +56,7 @@ export default function VisitedUser() {
       <div>{user?.description}</div>
 
       {/* User Posts */}
-      <DisplayPosts
+      <DisplayVisitedUserPosts
         posts={posts}
         setPosts={setPosts}
         loading={loading}

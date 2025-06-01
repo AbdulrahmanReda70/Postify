@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { handleGoogleAuth, signup } from "../authService";
 import signupImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import AlertPopup from "../../components/AlertPopup";
+import AlertPopup from "../../components/popup/AlertPopup";
 import LoginGoogle from "../LoginGoogle";
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -12,7 +12,7 @@ import {
   FormControlLabel,
   Radio,
   useMediaQuery,
-} from "@mui/material"; // Import MUI components
+} from "@mui/material";
 
 function SignUp() {
   const isMobile = useMediaQuery("(max-width: 768px)");
