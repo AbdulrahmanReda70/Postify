@@ -18,6 +18,7 @@ import { Suspense, lazy, useEffect } from "react";
 import { fetch_u } from "./utility/fetch";
 import { usePosts } from "./context/PostsContext";
 import Test from "./pages/Test";
+import { initialPost } from "./utility/initialPost";
 
 // Lazy-loaded components
 const History = lazy(() => import("./myPosts/history/History"));
@@ -31,28 +32,9 @@ const PostCreate = lazy(() => import("./post/PostCreate"));
 
 function App() {
   const { setFirstPost, setAllPosts } = usePosts();
+  setFirstPost(initialPost);
 
   useEffect(() => {
-    async function x() {
-      const res = await fetch_u("http://localhost:8000/api/first_post");
-      let fPost = res?.data?.post;
-      if (fPost) {
-        setFirstPost(fPost);
-      }
-      console.log("}{}{}{", fPost.id);
-
-      localStorage.setItem("first_post", JSON.stringify(fPost));
-      // setAllPosts((p) => {
-      //   return {
-      //     ...p,
-      //     home: {
-      //       byId: { ...fPost },
-      //       allIds: [fPost.id],
-      //     },
-      //   };
-      // });
-    }
-    x();
     const initialSpinner = document.querySelector("#preload-spinner-container");
     if (initialSpinner) initialSpinner.style.display = "none";
   }, []);

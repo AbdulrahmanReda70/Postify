@@ -6,7 +6,7 @@ import { fetch_u } from "../../utility/fetch";
 import HomeSkeleton from "../skeletons/HomeSkeleton";
 import { usePosts } from "../../context/PostsContext";
 
-function DisplayHomePosts({ posts = [], pageTitle, type }) {
+function DisplayHomePosts({ posts = [], pageTitle }) {
   const location = useLocation();
   const {
     firstPost,
@@ -53,6 +53,8 @@ function DisplayHomePosts({ posts = [], pageTitle, type }) {
   }
 
   function DisplayUser({ user }) {
+    console.log("user in DisplayUser", user);
+
     const avatar = user.avatar;
     const username = user.username;
     return (
@@ -72,13 +74,20 @@ function DisplayHomePosts({ posts = [], pageTitle, type }) {
     );
   }
 
+  function viewOrEditPost(canUpdate) {
+    console.log("canUpdate", canUpdate);
+
+    if (canUpdate) return "edit";
+    return "view";
+  }
+
   function DisplayFirstPost() {
     console.log(firstPost, "<><><");
 
     return (
       <Link
         state={{ from: location.pathname }}
-        to={`/${type}/${firstPost?.id}`}
+        to={`/${"view"}/${firstPost?.id}`}
         className="mb-5 block"
       >
         <div className="flex gap-x-[10px] max-w-[680px] justify-between break-all">
@@ -126,13 +135,15 @@ function DisplayHomePosts({ posts = [], pageTitle, type }) {
               const image = AllPosts.home.byId[id].image;
               const is_saved = AllPosts.home.byId[id].is_saved;
               const section = AllPosts.home.byId[id].section;
+              const canUpdate = AllPosts.home.byId[id].canUpdate;
+              console.log("canUpdate", canUpdate);
 
               const user = AllPosts.home.byId[id].user;
 
               return (
                 <Link
                   state={{ from: location.pathname }}
-                  to={`/${type}/${id}`}
+                  to={`/${viewOrEditPost(canUpdate)}/${id}`}
                   className="mb-5 block"
                   key={index}
                 >

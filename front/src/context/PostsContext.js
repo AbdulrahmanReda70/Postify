@@ -23,7 +23,6 @@ export function HomePostsProvider({ children }) {
     },
   });
 
-  const [homePosts, setHomePosts] = useState([]);
   const [loadHomePosts, setLoadHomePosts] = useState(true);
   const [hasFetchedHomePosts, setHasFetchedHomePosts] = useState(false);
 
@@ -108,6 +107,8 @@ export function HomePostsProvider({ children }) {
 
   function updatePost(updatedPost) {
     const id = updatedPost.id;
+    const prevPost = AllPosts.home.byId[id] || AllPosts.history.byId[id];
+    updatedPost = { ...prevPost, ...updatedPost };
     setAllPosts((p) => {
       return {
         ...p,

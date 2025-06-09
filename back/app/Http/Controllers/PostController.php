@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log as FacadesLog;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -18,7 +19,7 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function first_post()
+    public function firstPost()
     {
         $post = Post::with('user')->withExists(['savedByUsers as is_saved' => fn($q) => $q->where('user_id', Auth::id())])->where('is_hero', true)->latest()->first();
         $postArr = $post->toArray();
@@ -50,7 +51,6 @@ class PostController extends Controller
     {
         $posts = Auth::user()->savedPosts()->with('user')->latest()->get();
 
-
         return response()->json([
             'posts' => $posts
         ], 200);
@@ -59,14 +59,24 @@ class PostController extends Controller
     public function getPost($id)
     {
         //find($id)
-        $post = Post::withExists(['likedByUsers as liked'])->find($id);
+        $post = Post::where('id', $id)
+            ->withExists(['likedByUsers as liked'])
+            ->first();
         $postArr = $post->toArray();
         $postArr['likes_count'] = $post->likedByUsers()->count();
+
+        $canUpdate = Gate::allows('update', $post);
 
         if (!$post) {
             return response()->json(['message' => 'Post not found'], 404);
         }
-        return response()->json($postArr);
+
+        $postClass = get_class($post);
+        return response()->json([
+            'post' => $postArr,
+            'canUpdate' => $canUpdate,
+            'class' => $postClass,
+        ], 200);
     }
 
     public function getUserPost($id)
@@ -101,6 +111,7 @@ class PostController extends Controller
         $posts = $home_posts->getCollection()->slice(1)->values();
         foreach ($posts as $p) {
             $p['section'] = 'home';
+            $p['canUpdate'] = Gate::allows('canEdit', $p);
         }
 
         $home_posts = $home_posts->setCollection($posts);

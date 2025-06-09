@@ -134,21 +134,26 @@ function Home() {
       if (!res.error) {
         const posts = res.data.posts.data;
         const lastPage = res.data.posts.last_page;
-        const isFirstTime =
-          AllPosts.home.allIds.length === 0 ? {} : AllPosts.home.byId;
+
         setAllPosts((p) => {
-          const homePosts = posts.reduce((acc, post) => {
-            acc[post.id] = post;
+          const currentAllIds = p.home.allIds;
+          const currentById = p.home.byId;
 
-            AllPosts.home.allIds.push(post.id);
-            return acc;
-          }, isFirstTime);
+          const newById = { ...currentById };
+          const newAllIds = [...currentAllIds];
 
-          const home = AllPosts.home;
+          posts.forEach((post) => {
+            newById[post.id] = post;
+            newAllIds.push(post.id);
+          });
 
-          const newById = { ...homePosts };
-          const newHome = { ...home, byId: newById };
-          return { ...p, home: newHome };
+          return {
+            ...p,
+            home: {
+              byId: newById,
+              allIds: newAllIds,
+            },
+          };
         });
 
         // setHomePosts((p) => [...p, ...posts]);
@@ -161,13 +166,16 @@ function Home() {
     if (!hasFetchedHomePosts) {
       getPosts();
     }
+
+    console.log("AllPosts.home.byId", AllPosts.home.byId);
+    console.log("AllPosts.home.allIds", AllPosts.home.allIds);
   }, [homeCurrentPage]);
 
   return (
     <div className="container-c">
       {renderSearchInput()}
       <div className="w-[100%]">
-        <DisplayHomePosts  type={"view"} />
+        <DisplayHomePosts />
       </div>
       <div ref={ref} style={{ height: 20, background: "transparent" }}></div>
     </div>

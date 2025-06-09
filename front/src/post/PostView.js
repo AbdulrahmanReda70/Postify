@@ -15,9 +15,9 @@ function PostView() {
     async function getPost() {
       try {
         const res = await fetch_u(`http://localhost:8000/api/posts/${post_id}`);
-        setPost(res.data);
-        setLikesCount(res.data.likes_count);
-        setLike(res.data.liked);
+        setPost(res.data.post);
+        setLikesCount(res.data.post.likes_count);
+        setLike(res.data.post.liked);
       } catch (error) {
         console.error("Error fetching post:", error);
       }

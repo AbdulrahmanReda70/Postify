@@ -20,10 +20,10 @@ function PostEdit() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const { setHomePosts, updatePost, AllPosts } = usePosts();
+  const { updatePost, AllPosts } = usePosts();
 
   const location = useLocation();
-  const prev_page = location.state.from;
+  const prev_page = location.state.from || "/";
   const navigate = useNavigate();
 
   function open_confirm() {
@@ -119,7 +119,6 @@ function PostEdit() {
       setRes({ error: true, message: response.message });
     } else {
       setRes({ error: false, message: response.data.message });
-      setHomePosts([]);
       setTimeout(() => {
         navigate(prev_page, { replace: true });
       }, 1200);
