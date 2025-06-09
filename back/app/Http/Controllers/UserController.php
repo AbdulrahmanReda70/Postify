@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
 
-    public function get_visited_user(User $user)
+    public function getVisitedUser(User $user)
     {
         // Load the user's posts relationship and hide the password field
         $user_id = $user->id;

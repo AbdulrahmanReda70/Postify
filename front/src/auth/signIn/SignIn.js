@@ -3,8 +3,8 @@ import { handleGoogleAuth, login, saveUserInfo } from "../authService";
 import { FcGoogle } from "react-icons/fc";
 import signinImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import AlertPopup from "../../components/AlertPopup";
-import { useMediaQuery } from "@mui/material";
+import AlertPopup from "../../components/popup/AlertPopup";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 function SignIn() {
   const isMobile = useMediaQuery("(max-width: 768px)");

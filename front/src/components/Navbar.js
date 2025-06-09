@@ -1,19 +1,16 @@
 import React from "react";
 import logo from "../images/feather.png";
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from "@headlessui/react";
+
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Outlet, useLocation } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { getUserInfo } from "../auth/authService";
-
+const { Disclosure, DisclosureButton, DisclosurePanel } = await import(
+  "@headlessui/react"
+);
+const { Menu, MenuButton, MenuItem, MenuItems } = await import(
+  "@headlessui/react"
+);
 const userL = getUserInfo();
 
 const user = {
@@ -60,7 +57,7 @@ function Navbar() {
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
-                    {navigation.map((item) => (
+                    {navigation.map((item, index) => (
                       <NavLink
                         state={{ from: location.pathname }}
                         key={item.name}
@@ -185,8 +182,9 @@ function Navbar() {
 
           <DisclosurePanel className="md:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-              {navMobile.map((item) => (
+              {navMobile.map((item, index) => (
                 <Link
+                  key={index}
                   aria-current={item.current ? "page" : undefined}
                   to={item.href}
                   className={classNames(
@@ -228,8 +226,9 @@ function Navbar() {
                 </Link>
               </div>
               <div className="mt-3 space-y-1 px-2">
-                {userNavigation.map((item) => (
+                {userNavigation.map((item, index) => (
                   <Link
+                    key={index}
                     aria-current={item.current ? "page" : undefined}
                     to={item.href}
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextareaAutosize } from "@mui/material";
 import { fetch_u } from "../utility/fetch";
-import AlertPopup from "../components/AlertPopup";
+import AlertPopup from "../components/popup/AlertPopup";
 import { usePosts } from "../context/PostsContext";
 import { useNavigate } from "react-router";
 
@@ -12,7 +12,6 @@ function PostCreate() {
   const [is_open, setIs_open] = useState(false);
   const [res, setRes] = useState(null);
   const [preview, setPreview] = useState(null);
-  const { setCanFetch, setHomePosts, setHomeCurrentPage } = usePosts();
   const nav = useNavigate();
   async function handlePostPublish() {
     const formData = new FormData();
@@ -23,7 +22,7 @@ function PostCreate() {
     }
 
     let response = await fetch_u(
-      "http://localhost:8000/api/create_post",
+      "http://localhost:8000/api/posts",
       "POST",
       formData,
       true
@@ -33,10 +32,7 @@ function PostCreate() {
       setRes({ error: true, message: response.message });
     } else {
       setRes({ error: false, message: response.data.message });
-      setHomePosts([]);
-      setHomeCurrentPage(1);
-      setCanFetch(true);
-      nav("/");
+      nav("/posts/history");
     }
     setIs_open(true);
   }

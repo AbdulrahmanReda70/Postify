@@ -29,10 +29,7 @@ function UserProfile() {
     );
     if (conf) {
       try {
-        const res = await fetch_u(
-          "http://localhost:8000/api/user_delete",
-          "DELETE"
-        );
+        const res = await fetch_u("http://localhost:8000/api/user", "DELETE");
 
         if (!res.error) {
           console.log("Account deleted successfully:", res.message);
@@ -64,7 +61,7 @@ function UserProfile() {
 
   // Function to update the description on the server
   const updateDescription = async (newDescription) => {
-    const res = await fetch_u("http://localhost:8000/api/user_update", "POST", {
+    const res = await fetch_u("http://localhost:8000/api/user", "PATCH", {
       description: newDescription,
     });
 

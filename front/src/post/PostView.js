@@ -5,7 +5,6 @@ import { TextareaAutosize } from "@mui/material";
 import { RiHeartAdd2Line, RiHeartAdd2Fill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
 function PostView() {
   const { id: post_id } = useParams();
   const [post, setPost] = useState(null);
@@ -15,12 +14,10 @@ function PostView() {
   useEffect(() => {
     async function getPost() {
       try {
-        const res = await fetch_u(
-          `http://localhost:8000/api/post_view/${post_id}`
-        );
-        setPost(res.data);
-        setLikesCount(res.data.likes_count);
-        setLike(res.data.liked);
+        const res = await fetch_u(`http://localhost:8000/api/posts/${post_id}`);
+        setPost(res.data.post);
+        setLikesCount(res.data.post.likes_count);
+        setLike(res.data.post.liked);
       } catch (error) {
         console.error("Error fetching post:", error);
       }
@@ -34,7 +31,7 @@ function PostView() {
 
     try {
       let res = await fetch_u(
-        `http://localhost:8000/api/like_post/${postId}`,
+        `http://localhost:8000/api/posts/${postId}/like`,
         "POST"
       );
       if (!res.data.liked) {
