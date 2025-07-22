@@ -3,7 +3,7 @@ import { fetch_u } from "../../utility/fetch";
 import { usePosts } from "../../context/PostsContext";
 import DisplayMyPosts from "../../components/displayPosts/DisplayMyPosts";
 function Saved() {
-  const { loadSavedPosts, setLoadSavedPosts, AllPosts, setAllPosts } =
+  const { loadSavedPosts, setLoadSavedPosts, allPosts, setAllPosts } =
     usePosts();
 
   useEffect(() => {
@@ -15,11 +15,11 @@ function Saved() {
         setAllPosts((p) => {
           const savedPosts = posts.reduce((acc, post) => {
             acc[post.id] = post;
-            AllPosts.saved.allIds.push(post.id);
+            allPosts.saved.allIds.push(post.id);
             return acc;
           }, {});
 
-          const saved = AllPosts.saved;
+          const saved = allPosts.saved;
           const newById = { ...savedPosts };
           const newSaved = { ...saved, byId: newById };
           return { ...p, saved: newSaved };
@@ -42,7 +42,7 @@ function Saved() {
   }, []);
   // console.log(posts);
   return (
-    <div className="container-c">
+    <div className='container-c'>
       <DisplayMyPosts
         loading={loadSavedPosts}
         pageTitle={"Saved"}

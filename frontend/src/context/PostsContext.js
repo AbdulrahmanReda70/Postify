@@ -1,12 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
-// create context
-// use it in component and call the component exProvider
-// useContext
 
 const postsContext = createContext();
 
 export function HomePostsProvider({ children }) {
-  const [AllPosts, setAllPosts] = useState({
+  const [allPosts, setAllPosts] = useState({
     home: {
       byId: {},
       allIds: [],
@@ -37,9 +34,32 @@ export function HomePostsProvider({ children }) {
   // const [savedPosts, setSavedPosts] = useState([]);
   const [loadSavedPosts, setLoadSavedPosts] = useState(true);
 
+  function addHomePosts(posts) {
+    setAllPosts((p) => {
+      const currentAllIds = p.home.allIds;
+      const currentById = p.home.byId;
+
+      const newById = { ...currentById };
+      const newAllIds = [...currentAllIds];
+
+      posts.forEach((post) => {
+        newById[post.id] = post;
+        newAllIds.push(post.id);
+      });
+
+      return {
+        ...p,
+        home: {
+          byId: newById,
+          allIds: newAllIds,
+        },
+      };
+    });
+  }
+
   function removeSavedPost(id) {
-    const savedPostsById = AllPosts.saved.byId;
-    const savedPostsAllIds = AllPosts.saved.allIds;
+    const savedPostsById = allPosts.saved.byId;
+    const savedPostsAllIds = allPosts.saved.allIds;
 
     const newSavedPostsById = Object.fromEntries(
       Object.entries(savedPostsById).filter((ele) => ele[0] !== String(id))
@@ -67,12 +87,8 @@ export function HomePostsProvider({ children }) {
           is_saved: !p.is_saved,
         };
       });
-      // return null;
     }
     const id = post.id;
-    const PostSection = post.section;
-    console.log(PostSection, "SEC");
-
     setAllPosts((p) => {
       return {
         ...p,
@@ -107,7 +123,7 @@ export function HomePostsProvider({ children }) {
 
   function updatePost(updatedPost) {
     const id = updatedPost.id;
-    const prevPost = AllPosts.home.byId[id] || AllPosts.history.byId[id];
+    const prevPost = allPosts.home.byId[id] || allPosts.history.byId[id];
     updatedPost = { ...prevPost, ...updatedPost };
     setAllPosts((p) => {
       return {
@@ -140,35 +156,27 @@ export function HomePostsProvider({ children }) {
       value={{
         updatePost,
         removeSavedPost,
-        AllPosts,
         setAllPosts,
         toggleSavedPostState,
-        //
-        // homePosts,
-        // setHomePosts,
+        addHomePosts,
+        allPosts,
+        // //
         loadHomePosts,
         setLoadHomePosts,
         hasFetchedHomePosts,
         setHasFetchedHomePosts,
-
         // //
-        // historyPosts,
-        // setHistoryPosts,
         loadHistoryPosts,
         setLoadHistoryPosts,
         // //
-        // savedPosts,
-        // setSavedPosts,
         loadSavedPosts,
         setLoadSavedPosts,
         // //
-
-        //
         homeCurrentPage,
         setHomeCurrentPage,
         homeLastPage,
         setHomeLastPage,
-        //
+        // //
         firstPost,
         setFirstPost,
       }}

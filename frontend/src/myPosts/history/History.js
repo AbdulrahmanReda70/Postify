@@ -4,7 +4,7 @@ import DisplayMyPosts from "../../components/displayPosts/DisplayMyPosts";
 import { useLocation } from "react-router";
 import { usePosts } from "../../context/PostsContext";
 function History() {
-  const { AllPosts, setAllPosts, loadHistoryPosts, setLoadHistoryPosts } =
+  const { allPosts, setAllPosts, loadHistoryPosts, setLoadHistoryPosts } =
     usePosts();
   const [likesCount, setLikesCount] = useState(null);
 
@@ -22,11 +22,11 @@ function History() {
         setAllPosts((p) => {
           const historyPosts = posts.reduce((acc, post) => {
             acc[post.id] = post;
-            AllPosts.history.allIds.push(post.id);
+            allPosts.history.allIds.push(post.id);
             return acc;
           }, {});
 
-          const history = AllPosts.history;
+          const history = allPosts.history;
           const newById = { ...historyPosts };
           const newHistory = { ...history, byId: newById };
           return { ...p, history: newHistory };
@@ -49,11 +49,11 @@ function History() {
       });
   }, []);
   return (
-    <div className="container-c">
+    <div className='container-c'>
       <DisplayMyPosts
         loading={loadHistoryPosts}
         pageTitle={"History"}
-        posts={AllPosts.history}
+        posts={allPosts.history}
         type={"edit"}
       />
     </div>

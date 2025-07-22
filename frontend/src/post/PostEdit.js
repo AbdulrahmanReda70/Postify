@@ -20,7 +20,7 @@ function PostEdit() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const { updatePost, AllPosts } = usePosts();
+  const { updatePost, allPosts } = usePosts();
 
   const location = useLocation();
   const prev_page = location.state.from || "/";
@@ -98,11 +98,11 @@ function PostEdit() {
     } else {
       const updatedPost = response.data.post;
 
-      console.log("BEFORE", AllPosts);
+      console.log("BEFORE", allPosts);
 
       updatePost(updatedPost);
 
-      console.log("AFTER", AllPosts);
+      console.log("AFTER", allPosts);
       setRes({ error: false, message: response.data.message });
     }
     setIs_open(true);
@@ -128,23 +128,23 @@ function PostEdit() {
 
   if (!title) {
     return (
-      <div className="container-c">
-        <div className="flex items-center mb-5 flex-row-reverse gap-x-2">
+      <div className='container-c'>
+        <div className='flex items-center mb-5 flex-row-reverse gap-x-2'>
           <Skeleton
-            variant="rectangular"
+            variant='rectangular'
             width={80}
             height={40}
-            className="rounded"
+            className='rounded'
           />
           <Skeleton
-            variant="rectangular"
-            className="rounded"
+            variant='rectangular'
+            className='rounded'
             width={80}
             height={40}
           />
         </div>
-        <Skeleton variant="rectangular" height={50} className="mb-[50px]" />
-        <Skeleton variant="rectangular" height={300} />
+        <Skeleton variant='rectangular' height={50} className='mb-[50px]' />
+        <Skeleton variant='rectangular' height={300} />
       </div>
     );
   }
@@ -166,19 +166,19 @@ function PostEdit() {
         setIs_open={setIs_open}
         status={res}
       />
-      <div className="container-c">
-        <label className="flex items-center justify-center w-60 h-14 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg hover:border-blue-500 transition duration-300">
-          <span className="text-white">Upload Image</span>
+      <div className='container-c'>
+        <label className='flex items-center justify-center w-60 h-14 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg hover:border-blue-500 transition duration-300'>
+          <span className='text-white'>Upload Image</span>
           <input
-            type="file"
-            className="hidden"
+            type='file'
+            className='hidden'
             onChange={(e) => {
               setImage(e.target.files[0]);
               setPreview(URL.createObjectURL(e.target.files[0]));
             }}
           />
         </label>
-        <div className="flex items-center mb-5 flex-row-reverse gap-x-2">
+        <div className='flex items-center mb-5 flex-row-reverse gap-x-2'>
           <button onClick={open_confirm} className={`bg-red-500 flex `}>
             Delete
           </button>
@@ -190,29 +190,29 @@ function PostEdit() {
           <TextareaAutosize
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
+            placeholder='Title'
             className={`w-[600px] h-[100px] text-5xl mb-[30px] pb-[20px] `}
           />
         </div>
-        <div className="flex justify-center mb-8">
+        <div className='flex justify-center mb-8'>
           <img
-            className="h-[500px] w-[100%] rounded object-cover"
+            className='h-[500px] w-[100%] rounded object-cover'
             src={preview ? preview : `http://localhost:8000/storage/${image}`}
-            alt="img"
+            alt='img'
           />
         </div>
         <div>
           <TextareaAutosize
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            placeholder="Tell Your Story"
-            className="w-[600px]  text-2xl"
+            placeholder='Tell Your Story'
+            className='w-[600px]  text-2xl'
           />
         </div>
 
-        <div className="flex gap-x-1 mt-5 items-end">
+        <div className='flex gap-x-1 mt-5 items-end'>
           <motion.div
-            className="cursor-pointer flex"
+            className='cursor-pointer flex'
             onClick={handlePostLike}
             whileTap={{ scale: 1.2 }}
             animate={{ color: like ? "#ff2e63" : "#ccc" }}

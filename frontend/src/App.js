@@ -3,22 +3,11 @@ import SignIn from "./auth/signIn/SignIn";
 import SignUp from "./auth/signUp/SignUp";
 import Home from "./home/Home";
 import Navbar from "./components/Navbar";
-// import History from "./myPosts/history/History";
-// import Saved from "./myPosts/saved/Saved";
-// import PostEdit from "./post/PostEdit";
-// import PostView from "./post/PostView";
-// import PostCreate from "./post/PostCreate";
 import Protected from "./components/Protected";
 import GoogleCallback from "./auth/GoogleCallback";
-// import UserProfile from "./user/UserProfile";
 import VisitedUser from "./user/VisitedUser";
-// import NotFound from "./pages/NotFound";
-// import Notifications from "./pages/Notifications";
 import { Suspense, lazy, useEffect } from "react";
-import { fetch_u } from "./utility/fetch";
-import { usePosts } from "./context/PostsContext";
 import Test from "./pages/Test";
-import { initialPost } from "./utility/initialPost";
 
 // Lazy-loaded components
 const History = lazy(() => import("./myPosts/history/History"));
@@ -31,10 +20,6 @@ const UserProfile = lazy(() => import("./user/UserProfile"));
 const PostCreate = lazy(() => import("./post/PostCreate"));
 
 function App() {
-  const { setFirstPost, setAllPosts } = usePosts();
-  // TODO: Fix the initial Post appear every where
-  setFirstPost(initialPost);
-
   useEffect(() => {
     const initialSpinner = document.querySelector("#preload-spinner-container");
     if (initialSpinner) initialSpinner.style.display = "none";

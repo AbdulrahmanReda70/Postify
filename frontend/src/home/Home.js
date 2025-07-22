@@ -39,10 +39,7 @@ function Home() {
   }, []);
 
   const {
-    AllPosts,
-    setAllPosts,
-
-    loadHomePosts,
+    addHomePosts,
     setLoadHomePosts,
     homeCurrentPage,
     setHomeCurrentPage,
@@ -71,31 +68,31 @@ function Home() {
 
   function renderSearchInput() {
     return (
-      <div className="flex border-solid border-[1px] flex-row-reverse w-[230px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative">
+      <div className='flex border-solid border-[1px] flex-row-reverse w-[230px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative'>
         <input
           onChange={handleSearch}
-          placeholder="Search"
-          className="border-none w-[100%] h-[100%] mb-0 outline-none"
-          autoComplete="off"
+          placeholder='Search'
+          className='border-none w-[100%] h-[100%] mb-0 outline-none'
+          autoComplete='off'
         />
-        <CiSearch className="text-gray-400 size-5" />
+        <CiSearch className='text-gray-400 size-5' />
         {isVisible && (
           <div
             ref={searchRef}
-            className="absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[280px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20"
+            className='absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[280px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20'
           >
-            <h3 className="border-b-[1px] pb-1 mb-4 text-gray-400">Posts</h3>
+            <h3 className='border-b-[1px] pb-1 mb-4 text-gray-400'>Posts</h3>
             {searchPosts.map((post, index) => {
               return (
                 <Link
                   to={`/view/${post.id}`}
                   key={index}
-                  className="flex gap-2 items-center mb-4"
+                  className='flex gap-2 items-center mb-4'
                 >
                   <img
                     src={`http://localhost:8000/storage/${post.image}`}
-                    alt=""
-                    className="rounded-full w-6 h-6"
+                    alt=''
+                    className='rounded-full w-6 h-6'
                   />
                   <div>{post.title}</div>
                 </Link>
@@ -108,8 +105,6 @@ function Home() {
   }
 
   useEffect(() => {
-    console.log(homeLastPage);
-
     if (isInView && !loading && homeCurrentPage < homeLastPage) {
       setHomeCurrentPage((prev) => prev + 1);
       setHasFetchedHomePosts(false);
@@ -123,10 +118,9 @@ function Home() {
     setHomeCurrentPage,
     isInView,
   ]);
+
   useEffect(() => {
     async function getPosts() {
-      console.log("HOME", AllPosts);
-
       setLoading(true);
       let res = await fetch_u(
         `http://localhost:8000/api/posts/home?page=${homeCurrentPage}`
@@ -135,28 +129,7 @@ function Home() {
         const posts = res.data.posts.data;
         const lastPage = res.data.posts.last_page;
 
-        setAllPosts((p) => {
-          const currentAllIds = p.home.allIds;
-          const currentById = p.home.byId;
-
-          const newById = { ...currentById };
-          const newAllIds = [...currentAllIds];
-
-          posts.forEach((post) => {
-            newById[post.id] = post;
-            newAllIds.push(post.id);
-          });
-
-          return {
-            ...p,
-            home: {
-              byId: newById,
-              allIds: newAllIds,
-            },
-          };
-        });
-
-        // setHomePosts((p) => [...p, ...posts]);
+        addHomePosts(posts);
         setHomeLastPage(lastPage);
       }
       setLoadHomePosts(false);
@@ -166,15 +139,12 @@ function Home() {
     if (!hasFetchedHomePosts) {
       getPosts();
     }
-
-    console.log("AllPosts.home.byId", AllPosts.home.byId);
-    console.log("AllPosts.home.allIds", AllPosts.home.allIds);
   }, [homeCurrentPage]);
 
   return (
-    <div className="container-c">
+    <div className='container-c'>
       {renderSearchInput()}
-      <div className="w-[100%]">
+      <div className='w-[100%]'>
         <DisplayHomePosts />
       </div>
       <div ref={ref} style={{ height: 20, background: "transparent" }}></div>

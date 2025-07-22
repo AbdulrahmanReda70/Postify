@@ -10,7 +10,7 @@ import { usePosts } from "../../context/PostsContext";
 function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
   const category = pageTitle.toLocaleLowerCase(); // get posts group history | saved
   const location = useLocation();
-  const { AllPosts, toggleSavedPostState, setFirstPost } = usePosts();
+  const { allPosts, toggleSavedPostState, setFirstPost } = usePosts();
 
   async function handleSavePost(e, post) {
     e.preventDefault();
@@ -18,7 +18,7 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
     const postId = post.id;
     console.log(post);
 
-    console.log("FROM_History", AllPosts);
+    console.log("FROM_History", allPosts);
 
     toggleSavedPostState(post);
 
@@ -34,7 +34,7 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
     return (
       <Icon
         onClick={onClick}
-        className="cursor-pointer z-20"
+        className='cursor-pointer z-20'
         style={{ fontSize: "20px" }}
       />
     );
@@ -44,13 +44,13 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
     return (
       <Link
         to={`/user/${post?.user?.id}`}
-        className="flex mb-3 items-center gap-x-[6px] z-20"
+        className='flex mb-3 items-center gap-x-[6px] z-20'
       >
         {post?.user?.avatar && (
           <img
-            className="w-[34px] rounded-full h-[34px] object-cover"
+            className='w-[34px] rounded-full h-[34px] object-cover'
             src={post?.user?.avatar}
-            alt=""
+            alt=''
           />
         )}
         {post?.user?.username && post.user.username}
@@ -62,24 +62,24 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
     <>
       {!loading ? (
         <>
-          <h1 className="text-5xl mb-5 mt-5">{pageTitle}</h1>
-          {AllPosts[category].allIds.length !== 0 ? (
-            AllPosts[category].allIds.map((id, index) => {
-              const title = AllPosts[category].byId[id].title;
-              const created_at = AllPosts[category].byId[id].created_at;
-              const image = AllPosts[category].byId[id].image;
-              const is_saved = AllPosts[category].byId[id].is_saved;
-              const section = AllPosts[category].byId[id].section;
-              const is_hero = AllPosts[category].byId[id].is_hero;
+          <h1 className='text-5xl mb-5 mt-5'>{pageTitle}</h1>
+          {allPosts[category].allIds.length !== 0 ? (
+            allPosts[category].allIds.map((id, index) => {
+              const title = allPosts[category].byId[id].title;
+              const created_at = allPosts[category].byId[id].created_at;
+              const image = allPosts[category].byId[id].image;
+              const is_saved = allPosts[category].byId[id].is_saved;
+              const section = allPosts[category].byId[id].section;
+              const is_hero = allPosts[category].byId[id].is_hero;
               return (
                 <Link
                   state={{ from: location.pathname }}
                   to={`/${type}/${id}`}
-                  className="mb-5 block"
+                  className='mb-5 block'
                   key={index}
                 >
-                  <div className="flex gap-x-[10px] max-w-[680px] justify-between break-all">
-                    <div className="w-[100%] flex flex-col justify-center gap-y-[12px]">
+                  <div className='flex gap-x-[10px] max-w-[680px] justify-between break-all'>
+                    <div className='w-[100%] flex flex-col justify-center gap-y-[12px]'>
                       <div>
                         {pageTitle !== "History" && (
                           <DisplayUser
@@ -94,12 +94,12 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
                           />
                         )}
 
-                        <h1 className="text-2xl font-bold">{title}</h1>
+                        <h1 className='text-2xl font-bold'>{title}</h1>
                       </div>
 
-                      <div className="flex  mb-[10px] gap-x-[20px] items-center">
+                      <div className='flex  mb-[10px] gap-x-[20px] items-center'>
                         {displayDate(created_at)}
-                        <div className="flex items-center gap-2 z-10">
+                        <div className='flex items-center gap-2 z-10'>
                           {pageTitle !== "Saved" && (
                             <SaveIcon
                               isSaved={is_saved}
@@ -118,11 +118,11 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
                     </div>
                     <img
                       src={`http://localhost:8000/storage/${image}`}
-                      alt=""
-                      className="w-[150px] min-w-[150px] h-[140px] object-cover"
+                      alt=''
+                      className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />
                   </div>
-                  <div className="h-[1px] w-[70%] bg-secondary  mb-[25px]"></div>
+                  <div className='h-[1px] w-[70%] bg-secondary  mb-[25px]'></div>
                 </Link>
               );
             })
@@ -131,7 +131,7 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
           )}
         </>
       ) : (
-        <div className="container-c">
+        <div className='container-c'>
           {pageTitle === "History" ? <HistorySkeleton /> : <SavedSkeleton />}
         </div>
       )}
