@@ -29,7 +29,7 @@ Currently in its early development stage.<br><br>
 | Redux Toolkit              | Laravel Sanctum           |
 | Axios                      | Laravel Socialite         |
 | React Router DOM           | Laravel Tinker            |
-| Framer Motion              | SQLite                    |
+| Framer Motion              | Mysql                     |
 | Zod (Validation)           | Laravel Debugbar          |
 | React Hook Form            | Pest (Testing)            |
 | Material UI (MUI)          | FakerPHP                  |
