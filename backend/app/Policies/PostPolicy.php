@@ -20,7 +20,6 @@ class PostPolicy
     }
     public function delete(User $user, Post $post): bool
     {
-        // Only the post owner can update the post
         return $user->id === $post->user_id;
     }
 }

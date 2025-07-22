@@ -94,6 +94,7 @@ return [
 
     'middleware' => [
         'web',
+        'api',
         Authorize::class,
     ],
 
@@ -136,16 +137,10 @@ return [
     'watchers' => [
         Watchers\BatchWatcher::class => env('TELESCOPE_BATCH_WATCHER', true),
 
-        Watchers\LogWatcher::class => [
-
-            'enabled' => env('TELESCOPE_LOG_WATCHER', true),
-
-            'level' => 'debug',
-
-        ],
         Watchers\CacheWatcher::class => [
             'enabled' => env('TELESCOPE_CACHE_WATCHER', true),
             'hidden' => [],
+            'ignore' => [],
         ],
 
         Watchers\ClientRequestWatcher::class => env('TELESCOPE_CLIENT_REQUEST_WATCHER', true),
@@ -178,7 +173,7 @@ return [
 
         Watchers\LogWatcher::class => [
             'enabled' => env('TELESCOPE_LOG_WATCHER', true),
-            'level' => 'info',
+            'level' => 'error',
         ],
 
         Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', true),

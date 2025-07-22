@@ -1,36 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\User;
 use App\Models\Post;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserDataRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-class UserController extends Controller
+class ProfileController extends Controller
 {
-
     public function getVisitedUser(User $user)
     {
         // Load the user's posts relationship and hide the password field
         $user_id = $user->id;
-        $auth_user_id = Auth::user()->id;
-
-        $user = $user->makeHidden(['password', 'updated_at', 'created_at', 'user_role']);
-        $posts = Post::where('user_id', $user_id)->withExists(['savedByUsers as is_saved' => function ($query) use ($auth_user_id) {
-            $query->where('user_id', $auth_user_id);
-        }])->latest()->get();
+        $posts = Post::where('user_id', $user_id)->latest()->get();
 
         return response()->json(
             [
-                'user' => $user,
+                'user' => new UserResource($user),
                 'posts' => $posts
             ],
             200
         );
     }
-
-
 
     public function deleteUserAccount(Request $request)
     {
@@ -40,19 +33,12 @@ class UserController extends Controller
         return response()->json(['message' => 'User account deleted successfully'], 200);
     }
 
-    public function updateUserData(Request $request)
+    public function updateUserData(UpdateUserDataRequest $request)
     {
-        $user =  Auth::user();
-        $username = request()->username;
-        $email = request()->email;
 
-        request()->validate([
-            'email' => 'email| ',
-            'username' => 'string|max:255',
-            'password' => 'string|min:6',
-        ], [
-            'email.email' => 'The email must be a valid email address.',
-        ]);
+        $user =  Auth::user();
+        $username = $request->username;
+        $email = $request->email;
 
         if (User::where('email', $email)->exists() || $user->email == $email) {
             return response()->json(['error' => true, 'message' => 'Email already exists'], 422);

@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'Test User',
             'password' => 'test@example.com'
         ]);
+        
+        // Run the LikeSeeder
+        $this->call(LikeSeeder::class);
     }
 }
