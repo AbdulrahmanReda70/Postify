@@ -1,2 +1,0 @@
-- profiles images
-- make two types of the image: for home(small and light), for view post (big image)

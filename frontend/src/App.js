@@ -32,6 +32,7 @@ const PostCreate = lazy(() => import("./post/PostCreate"));
 
 function App() {
   const { setFirstPost, setAllPosts } = usePosts();
+  // TODO: Fix the initial Post appear every where
   setFirstPost(initialPost);
 
   useEffect(() => {
@@ -58,26 +59,26 @@ function App() {
     <Router>
       <Suspense fallback={<SuspenseLoading />}>
         <Routes>
-          <Route path="/auth/google" element={<GoogleCallback />} />
-          <Route path="/t" element={<Test />} />
+          <Route path='/auth/google' element={<GoogleCallback />} />
+          <Route path='/t' element={<Test />} />
           <Route element={<Protected />}>
             <Route element={<Navbar />}>
-              <Route path="/user/:visitedUserId" element={<VisitedUser />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/view/:id" element={<PostView />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/profile" element={<UserProfile />} />
-              <Route path="/write" element={<PostCreate />} />
-              <Route path="/edit/:id" element={<PostEdit />} />
-              <Route path="/posts">
-                <Route path="history" element={<History />} />
-                <Route path="saved" element={<Saved />} />
+              <Route path='/user/:visitedUserId' element={<VisitedUser />} />
+              <Route path='/' element={<Home />} />
+              <Route path='/view/:id' element={<PostView />} />
+              <Route path='/notifications' element={<Notifications />} />
+              <Route path='/profile' element={<UserProfile />} />
+              <Route path='/write' element={<PostCreate />} />
+              <Route path='/edit/:id' element={<PostEdit />} />
+              <Route path='/posts'>
+                <Route path='history' element={<History />} />
+                <Route path='saved' element={<Saved />} />
               </Route>
             </Route>
           </Route>
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path='/signin' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </Suspense>
     </Router>
