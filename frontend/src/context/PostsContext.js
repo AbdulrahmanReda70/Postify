@@ -2,20 +2,23 @@ import React, { createContext, useContext, useState } from "react";
 
 const postsContext = createContext();
 
-export function HomePostsProvider({ children }) {
+export function PostsProvider({ children }) {
   const [allPosts, setAllPosts] = useState({
+    byId: {},
+
     home: {
-      byId: {},
       allIds: [],
     },
 
     history: {
-      byId: {},
       allIds: [],
     },
 
     saved: {
-      byId: {},
+      allIds: [],
+    },
+
+    currentVisitedUser: {
       allIds: [],
     },
   });
@@ -26,31 +29,34 @@ export function HomePostsProvider({ children }) {
   const [homeCurrentPage, setHomeCurrentPage] = useState(1);
   const [homeLastPage, setHomeLastPage] = useState();
 
-  const [firstPost, setFirstPost] = useState({});
-
-  // const [historyPosts, setHistoryPosts] = useState([]);
   const [loadHistoryPosts, setLoadHistoryPosts] = useState(true);
 
-  // const [savedPosts, setSavedPosts] = useState([]);
   const [loadSavedPosts, setLoadSavedPosts] = useState(true);
 
-  function addHomePosts(posts) {
+  function addPostsToSection(posts, section) {
     setAllPosts((p) => {
+      const currentById = p.byId;
       const currentAllIds = p.home.allIds;
-      const currentById = p.home.byId;
 
       const newById = { ...currentById };
       const newAllIds = [...currentAllIds];
 
-      posts.forEach((post) => {
-        newById[post.id] = post;
-        newAllIds.push(post.id);
+      posts.forEach((newPost) => {
+        if (newPost.id) {
+          // if the post exist we will merge it
+          const id = newPost.id;
+          const oldPost = allPosts.byId[id];
+          newById[newPost.id] = { ...oldPost, ...newPost };
+        } else {
+          newById[newPost.id] = newPost;
+        }
+        newAllIds.push(newPost.id);
       });
 
       return {
         ...p,
-        home: {
-          byId: newById,
+        byId: newById,
+        [section]: {
           allIds: newAllIds,
         },
       };
@@ -78,75 +84,42 @@ export function HomePostsProvider({ children }) {
     });
   }
 
-  function toggleSavedPostState(post) {
-    console.log("OUT", post.is_hero);
-    if (post.is_hero) {
-      setFirstPost((p) => {
-        return {
-          ...p,
-          is_saved: !p.is_saved,
-        };
-      });
-    }
-    const id = post.id;
-    setAllPosts((p) => {
-      return {
-        ...p,
-        home: p.home.allIds.includes(id)
-          ? {
-              ...p.home,
-              byId: {
-                ...p.home.byId,
-                [id]: {
-                  ...p.home.byId[id],
-                  is_saved: !p.home.byId[id].is_saved,
-                },
-              },
-            }
-          : p.home,
+  function toggleSavedPostState(postId) {
+    setAllPosts((prev) => {
+      // Copy the existing post from global byId
+      const existingPost = prev.byId[postId];
+      if (!existingPost) return prev; // avoid crash if post doesn't exist
 
-        history: p.history.allIds.includes(id)
-          ? {
-              ...p.history,
-              byId: {
-                ...p.history.byId,
-                [id]: {
-                  ...p.history.byId[id],
-                  is_saved: !p.history.byId[id].is_saved,
-                },
-              },
-            }
-          : p.history,
+      // Toggle is_saved
+      const updatedPost = {
+        ...existingPost,
+        is_saved: !existingPost.is_saved,
+      };
+
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [postId]: updatedPost,
+        },
       };
     });
   }
 
-  function updatePost(updatedPost) {
+  function updatePost(updatedPost, section) {
     const id = updatedPost.id;
-    const prevPost = allPosts.home.byId[id] || allPosts.history.byId[id];
-    updatedPost = { ...prevPost, ...updatedPost };
-    setAllPosts((p) => {
-      return {
-        ...p,
-        home: p.home.allIds.includes(id)
-          ? {
-              ...p.home,
-              byId: {
-                ...p.home.byId,
-                [id]: updatedPost,
-              },
-            }
-          : p.home,
+    const prevPost = allPosts.byId[id];
 
-        history: p.history.allIds.includes(id)
-          ? {
-              ...p.history,
-              byId: {
-                ...p.history.byId,
-                [id]: updatedPost,
-              },
-            }
-          : p.history,
+    // Merge with previous post if exists
+    const mergedPost = { ...prevPost, ...updatedPost };
+
+    setAllPosts((prev) => {
+      return {
+        ...prev,
+        byId: {
+          ...prev.byId,
+          [id]: mergedPost,
+        },
       };
     });
   }
@@ -158,7 +131,7 @@ export function HomePostsProvider({ children }) {
         removeSavedPost,
         setAllPosts,
         toggleSavedPostState,
-        addHomePosts,
+        addPostsToSection,
         allPosts,
         // //
         loadHomePosts,
@@ -176,9 +149,6 @@ export function HomePostsProvider({ children }) {
         setHomeCurrentPage,
         homeLastPage,
         setHomeLastPage,
-        // //
-        firstPost,
-        setFirstPost,
       }}
     >
       {children}

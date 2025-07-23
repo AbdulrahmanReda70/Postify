@@ -1,10 +1,9 @@
 import "./app.css";
 import "./tailwind.css";
-import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { HomePostsProvider } from "./context/PostsContext";
+import { PostsProvider } from "./context/PostsContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ValidTokenContext from "./context/ValidTokenContext";
 
@@ -20,12 +19,12 @@ const root = createRoot(document.getElementById("root"));
 
 root.render(
   <ThemeProvider theme={darkTheme}>
-    <HomePostsProvider>
+    <PostsProvider>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <ValidTokenContext>
           <App />
         </ValidTokenContext>
       </GoogleOAuthProvider>
-    </HomePostsProvider>
+    </PostsProvider>
   </ThemeProvider>
 );

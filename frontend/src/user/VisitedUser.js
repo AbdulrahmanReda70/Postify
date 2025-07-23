@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { fetch_u } from "../utility/fetch";
-import DisplayHomePosts from "../components/displayPosts/DisplayHomePosts";
 import DisplayVisitedUserPosts from "../components/displayPosts/DisplayVisitedUserPosts";
+import { usePosts } from "../context/PostsContext";
 
 export default function VisitedUser() {
   const { visitedUserId } = useParams(); // Get the user ID from the URL
@@ -11,7 +11,7 @@ export default function VisitedUser() {
   const [loading, setLoading] = useState(null); // Store user data
 
   const nav = useNavigate();
-
+  const { addPostsToSection } = usePosts();
   // Fetch user data and posts
   useEffect(() => {
     async function fetchUserData() {
@@ -21,9 +21,10 @@ export default function VisitedUser() {
           `http://localhost:8000/api/users/${visitedUserId}`,
           "GET"
         );
+        const posts = res.data.posts;
         if (!res.error) {
           setUser(res.data.user);
-          setPosts(res.data.posts);
+          addPostsToSection(posts, "currentVisitedUser");
         } else {
           console.error("Failed to fetch user:", res.message);
           nav("/not-found", { replace: true }); // Redirect if user not found
@@ -43,15 +44,15 @@ export default function VisitedUser() {
   }
 
   return (
-    <div className="container-c">
+    <div className='container-c'>
       {/* User Info */}
-      <div className="flex items-center gap-4 mt-10 mb-8">
+      <div className='flex items-center gap-4 mt-10 mb-8'>
         <img
           src={user?.avatar}
           alt={`${user?.username}'s avatar`}
-          className="w-16 h-16 rounded-full object-cover"
+          className='w-16 h-16 rounded-full object-cover'
         />
-        <h1 className="text-4xl font-bold">{user?.username}</h1>
+        <h1 className='text-4xl font-bold'>{user?.username}</h1>
       </div>
       <div>{user?.description}</div>
 
@@ -60,7 +61,7 @@ export default function VisitedUser() {
         posts={posts}
         setPosts={setPosts}
         loading={loading}
-        type="view"
+        type='view'
       />
     </div>
   );

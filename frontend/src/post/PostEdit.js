@@ -12,6 +12,7 @@ import { usePosts } from "../context/PostsContext";
 function PostEdit() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [is_open, setIs_open] = useState(false);
   const [res, setRes] = useState(null);
   const [open, setOpen] = React.useState(false);
@@ -64,7 +65,7 @@ function PostEdit() {
       setBody(res.data.body);
       setImage(res.data.image);
       setLikesCount(res.data.likes_count);
-
+      setIsLoading(false);
       console.log(res);
       if (res.data.liked) {
         setLike(true);
@@ -126,7 +127,7 @@ function PostEdit() {
     setIs_open(true);
   }
 
-  if (!title) {
+  if (isLoading) {
     return (
       <div className='container-c'>
         <div className='flex items-center mb-5 flex-row-reverse gap-x-2'>

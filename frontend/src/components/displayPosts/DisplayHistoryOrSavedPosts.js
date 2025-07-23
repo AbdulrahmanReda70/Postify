@@ -7,25 +7,22 @@ import HistorySkeleton from "../skeletons/HistorySkeleton";
 import SavedSkeleton from "../skeletons/SavedSkeleton";
 import { usePosts } from "../../context/PostsContext";
 
-function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
+function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
   const category = pageTitle.toLocaleLowerCase(); // get posts group history | saved
   const location = useLocation();
-  const { allPosts, toggleSavedPostState, setFirstPost } = usePosts();
+  const { allPosts, toggleSavedPostState } = usePosts();
 
   async function handleSavePost(e, post) {
     e.preventDefault();
     e.stopPropagation();
     const postId = post.id;
-    console.log(post);
 
-    console.log("FROM_History", allPosts);
-
-    toggleSavedPostState(post);
+    toggleSavedPostState(postId);
 
     try {
       await fetch_u(`http://localhost:8000/api/posts/${postId}/save`, "POST");
     } catch (error) {
-      console.log("+_+_+", error);
+      console.log(error);
     }
   }
 
@@ -65,12 +62,13 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
           <h1 className='text-5xl mb-5 mt-5'>{pageTitle}</h1>
           {allPosts[category].allIds.length !== 0 ? (
             allPosts[category].allIds.map((id, index) => {
-              const title = allPosts[category].byId[id].title;
-              const created_at = allPosts[category].byId[id].created_at;
-              const image = allPosts[category].byId[id].image;
-              const is_saved = allPosts[category].byId[id].is_saved;
-              const section = allPosts[category].byId[id].section;
-              const is_hero = allPosts[category].byId[id].is_hero;
+              const title = allPosts.byId[id].title;
+              const created_at = allPosts.byId[id].created_at;
+              const image = allPosts.byId[id].image;
+              const is_saved = allPosts.byId[id].is_saved;
+              const section = allPosts.byId[id].section;
+              const is_hero = allPosts.byId[id].is_hero;
+
               return (
                 <Link
                   state={{ from: location.pathname }}
@@ -139,4 +137,4 @@ function DisplayMyPosts({ posts = [], loading, pageTitle, type }) {
   );
 }
 
-export default DisplayMyPosts;
+export default DisplayHistoryOrSavedPosts;

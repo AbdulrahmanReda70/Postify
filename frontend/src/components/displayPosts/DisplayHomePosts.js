@@ -6,11 +6,13 @@ import { fetch_u } from "../../utility/fetch";
 import HomeSkeleton from "../skeletons/HomeSkeleton";
 import { usePosts } from "../../context/PostsContext";
 
-function DisplayHomePosts({ posts = [], pageTitle }) {
+function DisplayHomePosts({ pageTitle }) {
   const location = useLocation();
   const { allPosts, loadHomePosts, toggleSavedPostState } = usePosts();
 
   // ------------------ Components & Functions ------------------
+
+  console.log("allPosts allPosts", allPosts);
 
   async function handleSavePost(e, post) {
     console.log(post);
@@ -19,7 +21,7 @@ function DisplayHomePosts({ posts = [], pageTitle }) {
     e.stopPropagation();
     const postId = post.id;
 
-    toggleSavedPostState(post);
+    toggleSavedPostState(postId);
 
     try {
       let res = await fetch_u(
@@ -43,7 +45,7 @@ function DisplayHomePosts({ posts = [], pageTitle }) {
   }
 
   function DisplayUser({ user }) {
-    console.log("user in DisplayUser", user);
+    console.log("USERRR", user);
 
     const avatar = user.avatar;
     const username = user.username;
@@ -75,18 +77,19 @@ function DisplayHomePosts({ posts = [], pageTitle }) {
 
   return (
     <>
+      {}
       <h1 className='text-5xl mb-5 mt-5'>{pageTitle}</h1>
       {!loadHomePosts ? (
         <>
           {allPosts.home.allIds.length !== 0 ? (
             allPosts.home.allIds.map((id, index) => {
-              const title = allPosts.home.byId[id].title;
-              const created_at = allPosts.home.byId[id].created_at;
-              const image = allPosts.home.byId[id].image;
-              const is_saved = allPosts.home.byId[id].is_saved;
-              const section = allPosts.home.byId[id].section;
-              const canUpdate = allPosts.home.byId[id].canUpdate;
-              const user = allPosts.home.byId[id].user;
+              const user = allPosts.byId[id].user;
+              const title = allPosts.byId[id].title;
+              const created_at = allPosts.byId[id].created_at;
+              const image = allPosts.byId[id].image;
+              const is_saved = allPosts.byId[id].is_saved;
+              const section = allPosts.byId[id].section;
+              const canUpdate = allPosts.byId[id].canUpdate;
 
               return (
                 <Link
@@ -99,7 +102,7 @@ function DisplayHomePosts({ posts = [], pageTitle }) {
                     <div className='w-[100%] flex flex-col justify-center gap-y-[12px]'>
                       {}
                       <div>
-                        <DisplayUser user={user} />
+                        {<DisplayUser user={user} />}
                         <h1 className='text-2xl font-bold'>{title}</h1>
                       </div>
 

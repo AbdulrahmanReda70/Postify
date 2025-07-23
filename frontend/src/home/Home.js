@@ -39,7 +39,7 @@ function Home() {
   }, []);
 
   const {
-    addHomePosts,
+    addPostsToSection,
     setLoadHomePosts,
     homeCurrentPage,
     setHomeCurrentPage,
@@ -129,7 +129,7 @@ function Home() {
         const posts = res.data.posts.data;
         const lastPage = res.data.posts.last_page;
 
-        addHomePosts(posts);
+        addPostsToSection(posts, "home");
         setHomeLastPage(lastPage);
       }
       setLoadHomePosts(false);
