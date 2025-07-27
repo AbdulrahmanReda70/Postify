@@ -48,3 +48,18 @@ Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
 Route::get('/img', fn() => response()->json([
     'img' => 'posts/deYx5CcsQ7amYYPxachEJQVRVpRktb4u1MoC8bpj.jpg.webp'
 ], 200));
+
+
+// Test Route
+Route::get('/test', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Test API route is working!',
+        'timestamp' => now(),
+        'data' => [
+            'server_time' => date('Y-m-d H:i:s'),
+            'environment' => config('app.env'),
+            'debug' => config('app.debug')
+        ]
+    ], 200);
+});
