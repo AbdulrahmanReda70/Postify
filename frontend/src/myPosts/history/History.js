@@ -13,7 +13,7 @@ function History() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://localhost:8000/api/user/posts");
+      let res = await fetch_u("http://13.53.39.169/api/user/posts");
       if (!res.error) {
         const posts = res.data.posts;
         setLikesCount(res.data.likes_count);

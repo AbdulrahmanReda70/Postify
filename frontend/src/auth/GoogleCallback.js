@@ -11,7 +11,7 @@ function GoogleCallback() {
   const nav = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/auth/callback${location.search}`, {
+    fetch(`http://13.53.39.169/api/auth/callback${location.search}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

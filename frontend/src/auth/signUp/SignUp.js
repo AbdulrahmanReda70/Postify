@@ -41,7 +41,7 @@ function SignUp() {
     }
 
     let { response, data } = await signup(
-      "http://localhost:8000/api/register",
+      "http://13.53.39.169/api/register",
       {
         username,
         password,

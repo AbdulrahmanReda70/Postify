@@ -17,7 +17,7 @@ function SignIn() {
 
   async function submit_form(e) {
     e.preventDefault();
-    const { response, data } = await login("http://localhost:8000/api/login", {
+    const { response, data } = await login("http://13.53.39.169/api/login", {
       email,
       password,
     });

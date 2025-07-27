@@ -37,7 +37,7 @@ function ModalF(modalOpen, setModalOpen, title, setUser) {
       return null;
     }
 
-    const res = await fetch_u("http://localhost:8000/api/user", "PATCH", {
+    const res = await fetch_u("http://13.53.39.169/api/user", "PATCH", {
       [field]: value,
     });
 

@@ -15,7 +15,7 @@ function Protected() {
 
       try {
         const response = await fetch(
-          "http://localhost:8000/api/auth/validate",
+          "http://13.53.39.169/api/auth/validate",
           {
             headers: {
               "Content-Type": "application/json",

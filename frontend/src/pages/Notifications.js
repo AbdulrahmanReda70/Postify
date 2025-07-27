@@ -12,7 +12,7 @@ function Notifications() {
     async function fetchNotifications() {
       try {
         const response = await fetch_u(
-          "http://localhost:8000/api/notifications",
+          "http://13.53.39.169/api/notifications",
           "GET"
         );
 

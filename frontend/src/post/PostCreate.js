@@ -22,7 +22,7 @@ function PostCreate() {
     }
 
     let response = await fetch_u(
-      "http://localhost:8000/api/posts",
+      "http://13.53.39.169/api/posts",
       "POST",
       formData,
       true

@@ -42,7 +42,7 @@ function PostEdit() {
 
     try {
       let res = await fetch_u(
-        `http://localhost:8000/api/posts/${postId}/like`,
+        `http://13.53.39.169/api/posts/${postId}/like`,
         "POST"
       );
       if (!res.data.liked) {
@@ -59,7 +59,7 @@ function PostEdit() {
 
   useEffect(() => {
     async function getPost() {
-      let res = await fetch_u(`http://localhost:8000/api/user/posts/${postId}`);
+      let res = await fetch_u(`http://13.53.39.169/api/user/posts/${postId}`);
 
       setTitle(res.data.title);
       setBody(res.data.body);
@@ -89,7 +89,7 @@ function PostEdit() {
     }
 
     let response = await fetch_u(
-      `http://localhost:8000/api/posts/${postId}`,
+      `http://13.53.39.169/api/posts/${postId}`,
       "POST",
       formData
     );
@@ -112,7 +112,7 @@ function PostEdit() {
   async function handlePostDelete() {
     close_confirm();
     let response = await fetch_u(
-      `http://localhost:8000/api/posts/${postId}`,
+      `http://13.53.39.169/api/posts/${postId}`,
       "DELETE"
     );
 
@@ -198,7 +198,7 @@ function PostEdit() {
         <div className='flex justify-center mb-8'>
           <img
             className='h-[500px] w-[100%] rounded object-cover'
-            src={preview ? preview : `http://localhost:8000/storage/${image}`}
+            src={preview ? preview : `http://13.53.39.169/storage/${image}`}
             alt='img'
           />
         </div>

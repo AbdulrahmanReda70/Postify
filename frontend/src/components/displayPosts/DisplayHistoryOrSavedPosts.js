@@ -20,7 +20,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
     toggleSavedPostState(postId);
 
     try {
-      await fetch_u(`http://localhost:8000/api/posts/${postId}/save`, "POST");
+      await fetch_u(`http://13.53.39.169/api/posts/${postId}/save`, "POST");
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +115,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
                       </div>
                     </div>
                     <img
-                      src={`http://localhost:8000/storage/${image}`}
+                      src={`http://13.53.39.169/storage/${image}`}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />

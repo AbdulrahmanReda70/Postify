@@ -77,7 +77,7 @@ export async function signup(url, credentials) {
 
 export async function handleGoogleAuth(e) {
   e.preventDefault();
-  fetch("http://localhost:8000/api/googleAuth", {
+  fetch("http://13.53.39.169/api/googleAuth", {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

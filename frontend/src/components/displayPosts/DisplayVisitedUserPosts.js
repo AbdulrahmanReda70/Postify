@@ -19,7 +19,7 @@ function DisplayVisitedUserPosts({ loading, pageTitle }) {
     toggleSavedPostState(id); // locally toggle
 
     try {
-      await fetch_u(`http://localhost:8000/api/posts/${id}/save`, "POST");
+      await fetch_u(`http://13.53.39.169/api/posts/${id}/save`, "POST");
     } catch (error) {
       console.log("+_+_+", error);
     }
@@ -99,7 +99,7 @@ function DisplayVisitedUserPosts({ loading, pageTitle }) {
                       </div>
                     </div>
                     <img
-                      src={`http://localhost:8000/storage/${image}`}
+                      src={`http://13.53.39.169/storage/${image}`}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />

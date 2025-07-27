@@ -7,7 +7,7 @@ function Saved() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://localhost:8000/api/user/posts/saved");
+      let res = await fetch_u("http://13.53.39.169/api/user/posts/saved");
       if (!res.error) {
         const posts = res.data.posts;
         addPostsToSection(posts, "saved");

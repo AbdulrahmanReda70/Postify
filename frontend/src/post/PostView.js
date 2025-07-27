@@ -14,7 +14,7 @@ function PostView() {
   useEffect(() => {
     async function getPost() {
       try {
-        const res = await fetch_u(`http://localhost:8000/api/posts/${post_id}`);
+        const res = await fetch_u(`http://13.53.39.169/api/posts/${post_id}`);
         setPost(res.data.post);
         setLikesCount(res.data.post.likes_count);
         setLike(res.data.post.liked);
@@ -31,7 +31,7 @@ function PostView() {
 
     try {
       let res = await fetch_u(
-        `http://localhost:8000/api/posts/${postId}/like`,
+        `http://13.53.39.169/api/posts/${postId}/like`,
         "POST"
       );
       if (!res.data.liked) {
@@ -72,7 +72,7 @@ function PostView() {
       <div className="flex justify-center mb-8">
         <img
           className="h-[500px] w-[100%] rounded object-cover"
-          src={`http://localhost:8000/storage/${post?.image}`}
+          src={`http://13.53.39.169/storage/${post?.image}`}
           alt="img"
         />
       </div>

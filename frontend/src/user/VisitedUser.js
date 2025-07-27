@@ -18,7 +18,7 @@ export default function VisitedUser() {
       try {
         // Fetch user details
         const res = await fetch_u(
-          `http://localhost:8000/api/users/${visitedUserId}`,
+          `http://13.53.39.169/api/users/${visitedUserId}`,
           "GET"
         );
         const posts = res.data.posts;
