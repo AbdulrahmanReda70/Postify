@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { fetch_u } from "../../utility/fetch";
+import api from "../../api/axios";
 import { usePosts } from "../../context/PostsContext";
 import DisplayHistoryOrSavedPosts from "../../components/displayPosts/DisplayHistoryOrSavedPosts";
 function Saved() {
@@ -7,7 +7,7 @@ function Saved() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://13.53.39.169/api/user/posts/saved");
+      let res = await api.get("user/posts/saved");
       if (!res.error) {
         const posts = res.data.posts;
         addPostsToSection(posts, "saved");

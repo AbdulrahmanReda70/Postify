@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AlertPopup from "../components/popup/AlertPopup";
-import { fetch_u } from "../utility/fetch";
+import api from "../api/axios";
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
@@ -11,10 +11,7 @@ function Notifications() {
   useEffect(() => {
     async function fetchNotifications() {
       try {
-        const response = await fetch_u(
-          "http://13.53.39.169/api/notifications",
-          "GET"
-        );
+        const response = await api.get("notifications");
 
         if (!response.error) {
           setNotifications(response.data);

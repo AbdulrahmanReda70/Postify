@@ -5,8 +5,8 @@ import Input from "@mui/material/Input";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import Stack from "@mui/material/Stack";
-import { fetch_u } from "../utility/fetch";
-import { saveUserInfo } from "../auth/authService";
+import api from "../api/axios";
+import { saveUserInfo } from "../api/authService";
 import AlertPopup from "./popup/AlertPopup";
 
 export default function InputModal({ modalOpen, setModalOpen, from, setUser }) {
@@ -37,7 +37,7 @@ function ModalF(modalOpen, setModalOpen, title, setUser) {
       return null;
     }
 
-    const res = await fetch_u("http://13.53.39.169/api/user", "PATCH", {
+    const res = await api.patch("user", {
       [field]: value,
     });
 
@@ -70,21 +70,21 @@ function ModalF(modalOpen, setModalOpen, title, setUser) {
               <Stack spacing={2}>
                 <FormControl>
                   <Input
-                    className="h-[40px] p-5 pl-1"
+                    className='h-[40px] p-5 pl-1'
                     autoFocus
                     required
                     placeholder={`Enter ${title.toLowerCase()}`}
                   />
                   {title === "password" && (
                     <Input
-                      className="h-[40px] p-3 mt-5 pl-1"
+                      className='h-[40px] p-3 mt-5 pl-1'
                       autoFocus
                       required
                       placeholder={`Confirm Password`}
                     />
                   )}
                 </FormControl>
-                <Button type="submit">Update</Button>
+                <Button type='submit'>Update</Button>
               </Stack>
             </form>
           </DialogActions>

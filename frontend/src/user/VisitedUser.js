@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { fetch_u } from "../utility/fetch";
+import api from "../api/axios";
 import DisplayVisitedUserPosts from "../components/displayPosts/DisplayVisitedUserPosts";
 import { usePosts } from "../context/PostsContext";
 
@@ -17,10 +17,7 @@ export default function VisitedUser() {
     async function fetchUserData() {
       try {
         // Fetch user details
-        const res = await fetch_u(
-          `http://13.53.39.169/api/users/${visitedUserId}`,
-          "GET"
-        );
+        const res = await api.get(`users/${visitedUserId}`);
         const posts = res.data.posts;
         if (!res.error) {
           setUser(res.data.user);

@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { displayDate } from "../../utility/functions";
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
-import { fetch_u } from "../../utility/fetch";
+import api from "../../api/axios";
 import HistorySkeleton from "../skeletons/HistorySkeleton";
 import SavedSkeleton from "../skeletons/SavedSkeleton";
 import { usePosts } from "../../context/PostsContext";
@@ -20,7 +20,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
     toggleSavedPostState(postId);
 
     try {
-      await fetch_u(`http://13.53.39.169/api/posts/${postId}/save`, "POST");
+      await api.post(`posts/${postId}/save`);
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +115,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
                       </div>
                     </div>
                     <img
-                      src={`http://13.53.39.169/storage/${image}`}
+                      src={`http://localhost:8000/storage/${image}`}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />

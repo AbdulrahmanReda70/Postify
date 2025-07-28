@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleGoogleAuth, login, saveUserInfo } from "../authService";
+import { handleGoogleAuth, login, saveUserInfo } from "../../api/authService";
 import { FcGoogle } from "react-icons/fc";
 import signinImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,7 +17,7 @@ function SignIn() {
 
   async function submit_form(e) {
     e.preventDefault();
-    const { response, data } = await login("http://13.53.39.169/api/login", {
+    const { response, data } = await login("http://localhost:8000/api/login", {
       email,
       password,
     });
@@ -33,60 +33,60 @@ function SignIn() {
   }
 
   return (
-    <div className="h-[100vh] flex bg-primary">
+    <div className='h-[100vh] flex bg-primary'>
       <AlertPopup is_open={is_open} setIs_open={setIs_open} status={res} />
       <form
         className={`p-[5px] ${
           !isMobile ? "w-[50%]" : "w-[100%]"
         } flex flex-col justify-center items-center `}
       >
-        <div className="w-[300px]">
+        <div className='w-[300px]'>
           <div>
-            <label htmlFor="email">email</label>
+            <label htmlFor='email'>email</label>
             <input
-              type="email"
-              id="email"
+              type='email'
+              id='email'
               onChange={(e) => setEmail(e.target.value)}
-              className="w-[100%]"
+              className='w-[100%]'
             />
           </div>
           <div>
-            <label htmlFor="password">Password</label>
+            <label htmlFor='password'>Password</label>
             <input
-              type="password"
-              id="password"
+              type='password'
+              id='password'
               onChange={(e) => setPassword(e.target.value)}
-              className="w-[100%]"
+              className='w-[100%]'
             />
           </div>
           <button
-            type="submit"
+            type='submit'
             onClick={submit_form}
-            className="btn font-bold bg-green"
+            className='btn font-bold bg-green'
           >
             sign In
           </button>
-          <div className="w-[100%] h-[1px] bg-white mt-[40px]"></div>
-          <div className="flex gap-x-[9px] ">
+          <div className='w-[100%] h-[1px] bg-white mt-[40px]'></div>
+          <div className='flex gap-x-[9px] '>
             <button
               onClick={handleGoogleAuth}
-              className="btn justify-center items-center flex gap-x-[5px] hover:bg-[#ea4335] hover:duration-[.5s]"
+              className='btn justify-center items-center flex gap-x-[5px] hover:bg-[#ea4335] hover:duration-[.5s]'
             >
-              <FcGoogle className="w-[20px] " />
+              <FcGoogle className='w-[20px] ' />
               <p>Google</p>
             </button>
           </div>
           <Link
             to={"/signup"}
-            className="block text-center mt-[15px] font-bold text-green"
+            className='block text-center mt-[15px] font-bold text-green'
           >
             don't have an account?
           </Link>
         </div>
       </form>
       {!isMobile && (
-        <div className="w-[50%] h-[100%]">
-          <img className="w-[100%] h-[100%]" src={signinImg} alt="" />
+        <div className='w-[50%] h-[100%]'>
+          <img className='w-[100%] h-[100%]' src={signinImg} alt='' />
         </div>
       )}
     </div>

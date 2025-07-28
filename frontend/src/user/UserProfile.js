@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { fetch_u } from "../utility/fetch";
+import api from "../api/axios";
 import InputModal from "../components/InputModal";
-import { getUserInfo } from "../auth/authService";
+import { getUserInfo } from "../api/authService";
 import { TextareaAutosize } from "@mui/material";
 import { useNavigate } from "react-router";
 
@@ -29,7 +29,7 @@ function UserProfile() {
     );
     if (conf) {
       try {
-        const res = await fetch_u("http://13.53.39.169/api/user", "DELETE");
+        const res = await api.delete("user");
 
         if (!res.error) {
           console.log("Account deleted successfully:", res.message);
@@ -61,7 +61,7 @@ function UserProfile() {
 
   // Function to update the description on the server
   const updateDescription = async (newDescription) => {
-    const res = await fetch_u("http://13.53.39.169/api/user", "PATCH", {
+    const res = await api.patch("user", {
       description: newDescription,
     });
 
@@ -99,51 +99,51 @@ function UserProfile() {
   }
 
   return (
-    <div className="container-c">
+    <div className='container-c'>
       <InputModal
         setUser={setUser}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         from={from}
       />
-      <div className="flex items-center gap-2 mt-10 mb-4">
-        <img src={user.avatar} alt="" className="w-12" />
-        <h2 className="text-4xl">{user.username}</h2>
+      <div className='flex items-center gap-2 mt-10 mb-4'>
+        <img src={user.avatar} alt='' className='w-12' />
+        <h2 className='text-4xl'>{user.username}</h2>
       </div>
       <div>
         <TextareaAutosize
           value={description}
           maxLength={200}
           onChange={handleDescription} // Use the debounced handler
-          placeholder="Tell the world about yourself"
+          placeholder='Tell the world about yourself'
           className={`max-w-[600px] h-[100px] max-h-[300px] text-xl mt-5 mb-[80px] pb-[20px] `}
         />
       </div>
-      <div className="flex flex-col gap-5 ">
+      <div className='flex flex-col gap-5 '>
         <div
           onClick={() => handleUpdate("username")}
-          className="flex justify-between items-center cursor-pointer"
+          className='flex justify-between items-center cursor-pointer'
         >
-          <div className="text-xl">Username</div>
-          <div className="text-[#8f8e8e]"> {user.username}</div>
+          <div className='text-xl'>Username</div>
+          <div className='text-[#8f8e8e]'> {user.username}</div>
         </div>
         <div
           onClick={() => handleUpdate("email")}
-          className="flex justify-between items-center cursor-pointer"
+          className='flex justify-between items-center cursor-pointer'
         >
-          <div className="text-xl">Email</div>
-          <div className="text-[#8f8e8e]">{user.email}</div>
+          <div className='text-xl'>Email</div>
+          <div className='text-[#8f8e8e]'>{user.email}</div>
         </div>
         <div
           onClick={() => handleUpdate("password")}
-          className="flex justify-between items-center cursor-pointer"
+          className='flex justify-between items-center cursor-pointer'
         >
-          <div className="text-xl">Password</div>
-          <div className="text-[#8f8e8e]">*****</div>
+          <div className='text-xl'>Password</div>
+          <div className='text-[#8f8e8e]'>*****</div>
         </div>
         <div
           onClick={handleDeleteAccount}
-          className="text-red-700 mt-5 cursor-pointer w-fit"
+          className='text-red-700 mt-5 cursor-pointer w-fit'
         >
           Delete Account
         </div>

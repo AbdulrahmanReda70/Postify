@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveUserInfo } from "./authService";
+import { saveUserInfo } from "../api/authService";
 
 function GoogleCallback() {
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ function GoogleCallback() {
   const nav = useNavigate();
 
   useEffect(() => {
-    fetch(`http://13.53.39.169/api/auth/callback${location.search}`, {
+    fetch(`http://localhost:8000/api/auth/callback${location.search}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -45,10 +45,10 @@ function GoogleCallback() {
 
 function DisplayLoading() {
   return (
-    <div className="flex justify-center items-center h-screen bg-primary text-white">
-      <div className="flex flex-col items-center gap-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
-        <p className="text-lg font-semibold">Loading...</p>
+    <div className='flex justify-center items-center h-screen bg-primary text-white'>
+      <div className='flex flex-col items-center gap-4'>
+        <div className='animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid'></div>
+        <p className='text-lg font-semibold'>Loading...</p>
       </div>
     </div>
   );

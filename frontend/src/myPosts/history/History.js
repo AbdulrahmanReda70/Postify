@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { fetch_u } from "../../utility/fetch";
 import DisplayHistoryOrSavedPosts from "../../components/displayPosts/DisplayHistoryOrSavedPosts";
 import { useLocation } from "react-router";
 import { usePosts } from "../../context/PostsContext";
+import api from "../../api/axios";
 function History() {
   const { addPostsToSection, loadHistoryPosts, setLoadHistoryPosts } =
     usePosts();
@@ -13,7 +13,7 @@ function History() {
 
   useEffect(() => {
     async function getPosts() {
-      let res = await fetch_u("http://13.53.39.169/api/user/posts");
+      let res = await api.get("user/posts");
       if (!res.error) {
         const posts = res.data.posts;
         setLikesCount(res.data.likes_count);

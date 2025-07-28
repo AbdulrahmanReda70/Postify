@@ -1,11 +1,10 @@
 import { GoogleLogin } from "@react-oauth/google";
-// import axios from "axios";
 
 const LoginGoogle = () => {
   const handleSuccess = async (response) => {
     try {
       const res = await fetch(
-        "http://13.53.39.169/api/auth/google/callback",
+        "http://localhost:8000/api/auth/google/callback",
         {
           method: "POST",
           headers: {

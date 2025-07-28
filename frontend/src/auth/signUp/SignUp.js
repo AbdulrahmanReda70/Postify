@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleGoogleAuth, signup } from "../authService";
+import { handleGoogleAuth, signup } from "../../api/authService";
 import signupImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import AlertPopup from "../../components/popup/AlertPopup";
@@ -41,7 +41,7 @@ function SignUp() {
     }
 
     let { response, data } = await signup(
-      "http://13.53.39.169/api/register",
+      "http://localhost:8000/api/register",
       {
         username,
         password,
@@ -62,7 +62,7 @@ function SignUp() {
   }
 
   return (
-    <div className="h-[100vh] flex bg-primary">
+    <div className='h-[100vh] flex bg-primary'>
       <AlertPopup is_open={is_open} setIs_open={setIs_open} status={res} />
 
       <form
@@ -70,102 +70,102 @@ function SignUp() {
           !isMobile ? "w-[50%]" : "w-[100%]"
         } flex flex-col justify-center items-center `}
       >
-        <div className="w-[300px]">
+        <div className='w-[300px]'>
           {/* Username Field */}
           <div>
-            <label htmlFor="username">Username</label>
+            <label htmlFor='username'>Username</label>
             <input
-              type="text"
-              id="username"
+              type='text'
+              id='username'
               onChange={(e) => setUsername(e.target.value)}
-              className="w-[100%]"
+              className='w-[100%]'
             />
           </div>
 
           <div>
-            <label htmlFor="email">Email</label>
+            <label htmlFor='email'>Email</label>
             <input
-              type="email"
-              id="email"
+              type='email'
+              id='email'
               onChange={(e) => setEmail(e.target.value)}
-              className="w-[100%]"
+              className='w-[100%]'
             />
           </div>
 
           <div>
-            <label htmlFor="password">Password</label>
+            <label htmlFor='password'>Password</label>
             <input
-              type="password"
-              id="password"
+              type='password'
+              id='password'
               onChange={(e) => setPassword(e.target.value)}
-              className="w-[100%]"
+              className='w-[100%]'
             />
             <div>
-              <label htmlFor="password_confirm">Confirm Password</label>
+              <label htmlFor='password_confirm'>Confirm Password</label>
               <input
-                type="password"
-                id="password_confirm"
+                type='password'
+                id='password_confirm'
                 onChange={(e) => setPassword_confirm(e.target.value)}
-                className="w-[100%]"
+                className='w-[100%]'
               />
             </div>
           </div>
 
           {/* Gender Selection */}
-          <div className="mt-1  ">
-            <FormControl component="fieldset">
-              <FormLabel component="legend" className="sr-only">
+          <div className='mt-1  '>
+            <FormControl component='fieldset'>
+              <FormLabel component='legend' className='sr-only'>
                 Gender
               </FormLabel>
               <RadioGroup
                 row
-                aria-label="gender"
-                name="gender"
+                aria-label='gender'
+                name='gender'
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
               >
                 <FormControlLabel
-                  value="male"
+                  value='male'
                   control={<Radio />}
-                  label="Male"
+                  label='Male'
                 />
                 <FormControlLabel
-                  value="female"
+                  value='female'
                   control={<Radio />}
-                  label="Female"
+                  label='Female'
                 />
               </RadioGroup>
             </FormControl>
           </div>
 
           <button
-            type="submit"
+            type='submit'
             onClick={submit_form}
-            className="btn font-bold bg-green !mt-[10px] "
+            className='btn font-bold bg-green !mt-[10px] '
           >
             Signup
           </button>
-          <div className="w-[100%] h-[1px] bg-white mt-[30px]"></div>
-          <div className="flex gap-x-[9px]">
+          <div className='w-[100%] h-[1px] bg-white mt-[30px]'></div>
+          <div className='flex gap-x-[9px]'>
             <button
               onClick={handleGoogleAuth}
-              className="btn justify-center items-center flex gap-x-[5px] hover:bg-[#ea4335] hover:duration-[.5s]"
+              className='btn justify-center items-center flex gap-x-[5px] hover:bg-[#ea4335] hover:duration-[.5s]'
             >
-              <FcGoogle className="w-[20px]" />
+              <FcGoogle className='w-[20px]' />
               <p>Google</p>
             </button>
           </div>
           <Link
             to={"/signin"}
-            className="block text-center mt-[15px] font-bold text-green"
+            className='block text-center mt-[15px] font-bold text-green'
           >
             Have an account?
           </Link>
         </div>
       </form>
       {!isMobile && (
-        <div className="w-[50%] h-[100%]">
-          <img className="w-[100%] h-[100%]" src={signupImg} alt="" />
+        <div className='w-[50%] h-[100%]'>
+          <img className='w-[100%] h-[100%]' src={signupImg} alt='' />
         </div>
       )}
     </div>

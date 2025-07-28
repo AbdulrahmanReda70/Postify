@@ -2,7 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { displayDate } from "../../utility/functions";
 import { BsBookmarkCheckFill, BsBookmark } from "react-icons/bs";
-import { fetch_u } from "../../utility/fetch";
+import api from "../../api/axios";
 import HomeSkeleton from "../skeletons/HomeSkeleton";
 import { usePosts } from "../../context/PostsContext";
 
@@ -24,10 +24,7 @@ function DisplayHomePosts({ pageTitle }) {
     toggleSavedPostState(postId);
 
     try {
-      let res = await fetch_u(
-        `http://13.53.39.169/api/posts/${postId}/save`,
-        "POST"
-      );
+      let res = await api.post(`posts/${postId}/save`);
     } catch (error) {
       console.log("+_+_+", error);
     }
@@ -119,7 +116,7 @@ function DisplayHomePosts({ pageTitle }) {
                       </div>
                     </div>
                     <img
-                      src={`http://13.53.39.169/storage/${image}`}
+                      src={`http://localhost:8000/storage/${image}`}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />

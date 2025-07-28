@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextareaAutosize } from "@mui/material";
-import { fetch_u } from "../utility/fetch";
+import api from "../api/axios";
 import AlertPopup from "../components/popup/AlertPopup";
 import { usePosts } from "../context/PostsContext";
 import { useNavigate } from "react-router";
@@ -21,12 +21,7 @@ function PostCreate() {
       formData.append("image", image);
     }
 
-    let response = await fetch_u(
-      "http://13.53.39.169/api/posts",
-      "POST",
-      formData,
-      true
-    );
+    let response = await api.post("posts", formData);
 
     if (response.error) {
       setRes({ error: true, message: response.message });

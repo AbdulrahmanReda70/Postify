@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import DisplayHomePosts from "../components/displayPosts/DisplayHomePosts";
-import { fetch_u } from "../utility/fetch";
 import { CiSearch } from "react-icons/ci";
 import { usePosts } from "../context/PostsContext";
 import { useInView } from "motion/react";
 import { Link } from "react-router-dom";
+import api from "../api/axios";
 function Home() {
   const [searchLastPage, setSearchLastPage] = useState();
   const [searchPosts, setSearchPosts] = useState([]);
@@ -53,10 +53,7 @@ function Home() {
     console.log(e.target.value);
     handleShow();
     let value = e.target.value;
-    let res = await fetch_u(
-      `http://13.53.39.169/api/posts/search?query=${value}`
-    );
-    console.log("==", res);
+    let res = await api.get(`posts/search?query=${value}`);
     if (!res.error) {
       const posts = res.data.data;
       const lastPage = res.data.last_page;
@@ -90,7 +87,7 @@ function Home() {
                   className='flex gap-2 items-center mb-4'
                 >
                   <img
-                    src={`http://13.53.39.169/storage/${post.image}`}
+                    src={`http://localhost:8000/storage/${post.image}`}
                     alt=''
                     className='rounded-full w-6 h-6'
                   />
@@ -122,9 +119,7 @@ function Home() {
   useEffect(() => {
     async function getPosts() {
       setLoading(true);
-      let res = await fetch_u(
-        `http://13.53.39.169/api/posts/home?page=${homeCurrentPage}`
-      );
+      let res = await api.get(`posts/home?page=${homeCurrentPage}`);
       if (!res.error) {
         const posts = res.data.posts.data;
         const lastPage = res.data.posts.last_page;

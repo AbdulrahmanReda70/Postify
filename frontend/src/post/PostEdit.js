@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { fetch_u } from "../utility/fetch";
 import { TextareaAutosize } from "@mui/material";
 import AlertPopup from "../components/popup/AlertPopup";
 import AlertDialog from "../components/popup/AlertDialog";
@@ -8,6 +7,7 @@ import { RiHeartAdd2Fill, RiHeartAdd2Line } from "react-icons/ri";
 import Skeleton from "@mui/material/Skeleton";
 import { motion } from "framer-motion";
 import { usePosts } from "../context/PostsContext";
+import api from "../api/axios";
 
 function PostEdit() {
   const [title, setTitle] = useState("");
@@ -41,10 +41,7 @@ function PostEdit() {
     setLike((prev) => !prev);
 
     try {
-      let res = await fetch_u(
-        `http://13.53.39.169/api/posts/${postId}/like`,
-        "POST"
-      );
+      let res = await api.post(`posts/${postId}/like`);
       if (!res.data.liked) {
         setLike(false);
         setLikesCount((prev) => Math.max(prev - 1, 0));
@@ -59,14 +56,13 @@ function PostEdit() {
 
   useEffect(() => {
     async function getPost() {
-      let res = await fetch_u(`http://13.53.39.169/api/user/posts/${postId}`);
-
+      let res = await api.get(`user/posts/${postId}`);
       setTitle(res.data.title);
       setBody(res.data.body);
       setImage(res.data.image);
       setLikesCount(res.data.likes_count);
       setIsLoading(false);
-      console.log(res);
+
       if (res.data.liked) {
         setLike(true);
       } else {
@@ -82,39 +78,28 @@ function PostEdit() {
     formData.append("body", body);
     formData.append("_method", "PATCH");
 
-    console.log(formData, "formData");
-
     if (image || preview) {
       formData.append("image", image);
     }
 
-    let response = await fetch_u(
-      `http://13.53.39.169/api/posts/${postId}`,
-      "POST",
-      formData
-    );
+    let response = await api.post(`posts/${postId}`, formData);
 
     if (response.error) {
       setRes({ error: true, message: response.message });
     } else {
       const updatedPost = response.data.post;
 
-      console.log("BEFORE", allPosts);
-
       updatePost(updatedPost);
 
-      console.log("AFTER", allPosts);
       setRes({ error: false, message: response.data.message });
     }
     setIs_open(true);
   }
 
   async function handlePostDelete() {
+    //TODO: the post don't removed from the posts state after it deleted
     close_confirm();
-    let response = await fetch_u(
-      `http://13.53.39.169/api/posts/${postId}`,
-      "DELETE"
-    );
+    let response = await api.delete(`posts/${postId}`);
 
     if (response.error) {
       setRes({ error: true, message: response.message });
