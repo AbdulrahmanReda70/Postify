@@ -64,7 +64,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
             allPosts[category].allIds.map((id, index) => {
               const title = allPosts.byId[id].title;
               const created_at = allPosts.byId[id].created_at;
-              const image = allPosts.byId[id].image;
+              const image = allPosts.byId[id].image_url;
               const is_saved = allPosts.byId[id].is_saved;
               const section = allPosts.byId[id].section;
               const is_hero = allPosts.byId[id].is_hero;
@@ -115,7 +115,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
                       </div>
                     </div>
                     <img
-                      src={`http://localhost:8000/storage/${image}`}
+                      src={image}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />

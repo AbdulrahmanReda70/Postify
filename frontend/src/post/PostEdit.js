@@ -59,7 +59,7 @@ function PostEdit() {
       let res = await api.get(`user/posts/${postId}`);
       setTitle(res.data.title);
       setBody(res.data.body);
-      setImage(res.data.image);
+      setImage(res.data.image_url);
       setLikesCount(res.data.likes_count);
       setIsLoading(false);
 
@@ -183,7 +183,7 @@ function PostEdit() {
         <div className='flex justify-center mb-8'>
           <img
             className='h-[500px] w-[100%] rounded object-cover'
-            src={preview ? preview : `http://localhost:8000/storage/${image}`}
+            src={preview ? preview : image}
             alt='img'
           />
         </div>

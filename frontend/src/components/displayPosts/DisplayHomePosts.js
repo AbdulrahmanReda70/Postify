@@ -83,7 +83,7 @@ function DisplayHomePosts({ pageTitle }) {
               const user = allPosts.byId[id].user;
               const title = allPosts.byId[id].title;
               const created_at = allPosts.byId[id].created_at;
-              const image = allPosts.byId[id].image;
+              const image = allPosts.byId[id].image_url;
               const is_saved = allPosts.byId[id].is_saved;
               const section = allPosts.byId[id].section;
               const canUpdate = allPosts.byId[id].canUpdate;
@@ -116,7 +116,7 @@ function DisplayHomePosts({ pageTitle }) {
                       </div>
                     </div>
                     <img
-                      src={`http://localhost:8000/storage/${image}`}
+                      src={image}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />

@@ -87,7 +87,7 @@ function Home() {
                   className='flex gap-2 items-center mb-4'
                 >
                   <img
-                    src={`http://localhost:8000/storage/${post.image}`}
+                    src={post.image_url}
                     alt=''
                     className='rounded-full w-6 h-6'
                   />

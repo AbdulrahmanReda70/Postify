@@ -69,7 +69,7 @@ function PostView() {
       <div className='flex justify-center mb-8'>
         <img
           className='h-[500px] w-[100%] rounded object-cover'
-          src={`http://localhost:8000/storage/${post?.image}`}
+          src={post?.image_url}
           alt='img'
         />
       </div>

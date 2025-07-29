@@ -69,9 +69,8 @@ function DisplayVisitedUserPosts({ loading, pageTitle }) {
               const post = allPosts.byId[id];
               if (!post) return null;
 
-              const { title, created_at, image, is_saved, section, user } =
+              const { title, created_at, image_url, is_saved, section, user } =
                 post;
-
               return (
                 <Link
                   state={{ from: location.pathname }}
@@ -99,7 +98,7 @@ function DisplayVisitedUserPosts({ loading, pageTitle }) {
                       </div>
                     </div>
                     <img
-                      src={`http://localhost:8000/storage/${image}`}
+                      src={image_url}
                       alt=''
                       className='w-[150px] min-w-[150px] h-[140px] object-cover'
                     />
