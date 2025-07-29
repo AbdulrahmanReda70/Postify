@@ -48,11 +48,11 @@ class CreatePost implements ShouldQueue
     public function handle(): void
 {
 
-
     Post::create([
         'user_id' => Auth::id(),
         'title' => $this->title,
         'body' => $this->body,
+        'image' => $this->imagePath,
     ]);
 }
 
