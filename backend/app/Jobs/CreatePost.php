@@ -25,14 +25,14 @@ class CreatePost implements ShouldQueue
 
     ){}
 
-    public static function fromRequest(StorePostRequest $request,ImageResizer $imageResizer){
+    public static function fromRequest(StorePostRequest $request){
 
         $imagePath = null;
 
         if ($request->hasFile('image')) {
             // Get the uploaded image
             $image = $request->file('image');
-            $imagePath = $imageResizer->resizeAndConvertToWebP($image);
+            $imagePath = $image->store('posts/images', config('filesystems.default'));
         }
 
         return new self(

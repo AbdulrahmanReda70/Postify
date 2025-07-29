@@ -24,7 +24,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|min:5|string',
             'body' => 'required|min:20|string',
-            // 'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|max:2048',
         ];
     }
 }

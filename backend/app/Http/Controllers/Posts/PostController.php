@@ -20,10 +20,10 @@ class PostController extends Controller
      * Display a listing of the resource.
      */
 
-     public function store(StorePostRequest $request, ImageResizer $imageResizer)
+     public function store(StorePostRequest $request)
      {
 
-            dispatch_sync(CreatePost::fromRequest($request, $imageResizer));
+            dispatch_sync(CreatePost::fromRequest($request));
 
             return response()->json([
                 'message' => 'Post created successfully!',

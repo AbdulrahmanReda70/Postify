@@ -24,7 +24,7 @@ class UpdatePost implements ShouldQueue
         private ?string $oldImagePath
     ) {}
 
-    public static function fromRequest(UpdatePostRequest $request, Post $post, ImageResizer $imageResizer)
+    public static function fromRequest(UpdatePostRequest $request, Post $post)
     {
         $imagePath = null;
         $oldImagePath = null;
@@ -32,10 +32,10 @@ class UpdatePost implements ShouldQueue
         if ($request->hasFile('image')) {
             // Store the old image path for deletion
             $oldImagePath = $post->image;
-            
+
             // Get the uploaded image and process it
             $image = $request->file('image');
-            $imagePath = $imageResizer->resizeAndConvertToWebP($image);
+            $imagePath = $image->store('posts/images', config('filesystems.default'));
         }
 
         return new self(
@@ -60,10 +60,10 @@ class UpdatePost implements ShouldQueue
         // Add image path if a new image was uploaded
         if ($this->imagePath !== null) {
             $data['image'] = $this->imagePath;
-            
+
             // Delete the old image if it exists
             if ($this->oldImagePath) {
-                Storage::disk('public')->delete($this->oldImagePath);
+                Storage::disk(config('filesystems.default'))->delete($this->oldImagePath);
             }
         }
 
