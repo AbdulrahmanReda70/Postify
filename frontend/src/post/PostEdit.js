@@ -183,7 +183,7 @@ function PostEdit() {
         <div className='flex justify-center mb-8'>
           <img
             className='h-[500px] w-[100%] rounded object-cover'
-            src={preview ? preview : `http://13.53.39.169/storage/${image}`}
+            src={preview ? preview : `http://localhost:8000/storage/${image}`}
             alt='img'
           />
         </div>

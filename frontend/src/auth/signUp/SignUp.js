@@ -3,7 +3,6 @@ import { handleGoogleAuth, signup } from "../../api/authService";
 import signupImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import AlertPopup from "../../components/popup/AlertPopup";
-import LoginGoogle from "../LoginGoogle";
 import { FcGoogle } from "react-icons/fc";
 import {
   FormControl,
@@ -13,6 +12,8 @@ import {
   Radio,
   useMediaQuery,
 } from "@mui/material";
+
+console.log(process.env.REACT_APP_API_URL);
 
 function SignUp() {
   const isMobile = useMediaQuery("(max-width: 768px)");
