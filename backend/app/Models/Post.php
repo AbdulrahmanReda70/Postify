@@ -26,7 +26,7 @@ class Post extends Model
 
     public function getImageUrlAttribute()
     {
-        return Storage::disk(config('filesystems.default'))->url($this->image);
+        return $this->image ? Storage::disk(config('filesystems.default'))->url($this->image) : null;
     }
 
     public function user()
