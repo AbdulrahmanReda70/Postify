@@ -13,7 +13,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 
-console.log(process.env.REACT_APP_API_URL);
+let apiUrl = process.env.REACT_APP_API_URL;
 
 function SignUp() {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -41,8 +41,7 @@ function SignUp() {
       return null;
     }
 
-    let { response, data } = await signup(
-      "http://localhost:8000/api/register",
+    let { response, data } = await signup(`${apiUrl}register`,
       {
         username,
         password,

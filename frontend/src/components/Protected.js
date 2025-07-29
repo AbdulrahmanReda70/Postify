@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
 import { useIsValidToken } from "../context/ValidTokenContext";
-
+let apiUrl = process.env.REACT_APP_API_URL;
 function Protected() {
   const token = localStorage.getItem("auth_token");
   const { isValid, setIsValid } = useIsValidToken();
@@ -14,15 +14,12 @@ function Protected() {
       }
 
       try {
-        const response = await fetch(
-          "http://localhost:8000/api/auth/validate",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}auth/validate`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.ok) {
           setIsValid(true);
@@ -45,7 +42,7 @@ function Protected() {
   if (isValid) {
     return <Outlet />;
   }
-  return <Navigate to="/signin" replace />;
+  return <Navigate to='/signin' replace />;
 }
 
 export default Protected;

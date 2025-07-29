@@ -22,13 +22,11 @@ class PostController extends Controller
 
      public function store(StorePostRequest $request)
      {
-
             dispatch_sync(CreatePost::fromRequest($request));
 
             return response()->json([
                 'message' => 'Post created successfully!',
              ], 201); // 201 for resource created
-
      }
 
 

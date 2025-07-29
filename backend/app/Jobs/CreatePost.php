@@ -53,7 +53,6 @@ class CreatePost implements ShouldQueue
         'user_id' => Auth::id(),
         'title' => $this->title,
         'body' => $this->body,
-        'image' => $this->imagePath,
     ]);
 }
 

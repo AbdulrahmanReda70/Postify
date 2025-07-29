@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import AlertPopup from "../../components/popup/AlertPopup";
 import useMediaQuery from "../../hooks/useMediaQuery";
 
+let apiUrl = process.env.REACT_APP_API_URL;
+
 function SignIn() {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [password, setPassword] = useState("");
@@ -17,7 +19,7 @@ function SignIn() {
 
   async function submit_form(e) {
     e.preventDefault();
-    const { response, data } = await login("http://localhost:8000/api/login", {
+    const { response, data } = await login(`${apiUrl}login`, {
       email,
       password,
     });

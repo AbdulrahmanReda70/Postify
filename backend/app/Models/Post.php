@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id', 'title', 'body', 'image'];
-    protected $appends = ['likes_count','is_saved'];
+    protected $appends = ['likes_count','is_saved', 'image_url'];
 
 
     public function getIsSavedAttribute()
@@ -21,6 +22,11 @@ class Post extends Model
     public function getLikesCountAttribute()
     {
         return $this->likedByUsers()->count();
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return Storage::disk(config('filesystems.default'))->url($this->image);
     }
 
     public function user()
