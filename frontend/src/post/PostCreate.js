@@ -4,6 +4,9 @@ import api from "../api/axios";
 import AlertPopup from "../components/popup/AlertPopup";
 import { usePosts } from "../context/PostsContext";
 import { useNavigate } from "react-router";
+import WriteComment from "../components/comment/WriteComment";
+import Comment from "../components/comment/Comment";
+import CommentsLayout from "../components/comment/CommentsLayout";
 
 function PostCreate() {
   const [title, setTitle] = useState("");
@@ -35,12 +38,12 @@ function PostCreate() {
   return (
     <div>
       <AlertPopup is_open={is_open} setIs_open={setIs_open} status={res} />
-      <div className="container-c">
-        <label className="flex items-center justify-center w-60 h-14 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg hover:border-blue-500 transition duration-300">
-          <span className="text-white">Upload Image</span>
+      <div className='container-c'>
+        <label className='flex items-center justify-center w-60 h-14 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg hover:border-blue-500 transition duration-300'>
+          <span className='text-white'>Upload Image</span>
           <input
-            type="file"
-            className="hidden"
+            type='file'
+            className='hidden'
             onChange={(e) => {
               setImage(e.target.files[0]);
               setPreview(URL.createObjectURL(e.target.files[0]));
@@ -57,16 +60,16 @@ function PostCreate() {
           <TextareaAutosize
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
+            placeholder='Title'
             className={`w-[600px] h-[100px] text-4xl mb-[30px] pb-[20px] `}
           />
         </div>
-        <div className="flex justify-center mb-8">
+        <div className='flex justify-center mb-8'>
           {preview && (
             <img
-              className="h-[500px] w-[100%] rounded object-cover"
+              className='h-[500px] w-[100%] rounded object-cover'
               src={preview}
-              alt="img"
+              alt='img'
             />
           )}
         </div>
@@ -75,10 +78,11 @@ function PostCreate() {
           <TextareaAutosize
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            placeholder="Tell Your Story"
-            className="w-[600px] mb-80 text-2xl"
+            placeholder='Tell Your Story'
+            className='w-[600px] mb-80 text-2xl'
           />
         </div>
+        <CommentsLayout />
       </div>
     </div>
   );

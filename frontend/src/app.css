@@ -2,87 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.btn{
-    @apply w-[100%] border rounded-[10px] mt-10 flex items-center justify-center gap-x-[5px];
+.btn {
+  @apply w-[100%] border rounded-[10px] mt-10 flex items-center justify-center gap-x-[5px];
 }
 
-.container-c{
-    @apply max-w-[700px] m-auto mb-[50px]
+.container-c {
+  @apply max-w-[700px] m-auto mb-[50px];
 }
 
-html{
-    @apply bg-primary;
+html {
+  @apply bg-primary;
 }
 
-label{
-    display: block;
-    margin-bottom: 5px
+label {
+  display: block;
+  margin-bottom: 5px;
 }
 
-body{
-    color: white;
+body {
+  color: white;
+  min-height: 100vh;
 }
 
 input {
-    background-color: transparent ;
-    border-radius: 5px;
-    border: white solid 1px;
-    height: 38px;
-    margin-bottom: 12px;
-    padding-left:5px;
-    padding-right:5px;
+  background-color: transparent;
+  border-radius: 5px;
+  border: white solid 1px;
+  height: 38px;
+  margin-bottom: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 textarea {
-    width: 100%;
-    word-wrap: break-word;
-    white-space: pre-wrap; /* Keeps formatting and line breaks */
-    color: white;
-    background-color: transparent;
-    border: none;
-    outline: none !important;
-    resize: none;
+  width: 100%;
+  word-wrap: break-word;
+  white-space: pre-wrap; /* Keeps formatting and line breaks */
+  color: white;
+  background-color: transparent;
+  border: none;
+  outline: none !important;
+  resize: none;
 }
 input:-webkit-autofill {
-    -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-
-
-
-
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 
 button {
-    padding: 8px;
-    border-radius: 12px;
-    margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  margin-bottom: 10px;
 }
 
 .custom-scroll-bar {
-    overflow: auto;
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: #555 #222; /* Thumb and Track color */
-  }
+  overflow: auto;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #555 #222; /* Thumb and Track color */
+}
 
-  /* WebKit (Chrome, Edge, Safari) */
-  .custom-scroll-bar::-webkit-scrollbar {
-    width: 8px;
-  }
+/* WebKit (Chrome, Edge, Safari) */
+.custom-scroll-bar::-webkit-scrollbar {
+  width: 8px;
+}
 
-  .custom-scroll-bar::-webkit-scrollbar-track {
-    background: #222; /* Dark background */
-    border-radius: 4px;
-  }
+.custom-scroll-bar::-webkit-scrollbar-track {
+  background: #222; /* Dark background */
+  border-radius: 4px;
+}
 
-  .custom-scroll-bar::-webkit-scrollbar-thumb {
-    background: #555; /* Dark gray thumb */
-    border-radius: 4px;
-  }
+.custom-scroll-bar::-webkit-scrollbar-thumb {
+  background: #555; /* Dark gray thumb */
+  border-radius: 4px;
+}
 
-  .custom-scroll-bar::-webkit-scrollbar-thumb:hover {
-    background: #777; /* Lighter gray on hover */
-  }
+.custom-scroll-bar::-webkit-scrollbar-thumb:hover {
+  background: #777; /* Lighter gray on hover */
+}
 
 .not-found-container {
   height: 100vh;
@@ -90,7 +86,7 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color:#1b1c1d ;
+  background-color: #1b1c1d;
   color: #333;
 }
 
@@ -118,10 +114,9 @@ button {
   background-color: #0056b3;
 }
 
-
 .preload-spinner-container {
   font-size: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   position: fixed;
   inset: 0; /* Covers the whole screen */
   display: flex;
@@ -145,20 +140,18 @@ button {
   border-color: transparent; /* Make other borders transparent */
   border-top-color: #3b82f6; /* Tailwind: border-blue-500 */
 
-
   /* Tailwind: animate-spin */
   animation: spin 1s linear infinite;
 }
 
 .preload-spinner-text {
-   /* Tailwind: text-lg font-semibold */
-   margin-top: 1rem; /* Add some space */
-   color: white; /* Adjust color as needed */
-   font-size: 1.125rem /* 18px */;
-   line-height: 1.75rem /* 28px */;
-   font-weight: 600;
-  }
-
+  /* Tailwind: text-lg font-semibold */
+  margin-top: 1rem; /* Add some space */
+  color: white; /* Adjust color as needed */
+  font-size: 1.125rem /* 18px */;
+  line-height: 1.75rem /* 28px */;
+  font-weight: 600;
+}
 
 @keyframes spin {
   from {

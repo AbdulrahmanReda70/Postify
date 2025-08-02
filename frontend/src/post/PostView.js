@@ -5,25 +5,51 @@ import { RiHeartAdd2Line, RiHeartAdd2Fill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import Skeleton from "@mui/material/Skeleton";
 import api from "../api/axios";
+import CommentsLayout from "../components/comment/CommentsLayout";
+import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa";
+
 function PostView() {
-  const { id: post_id } = useParams();
+  const { id: postId } = useParams();
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
-  const [likesCount, setLikesCount] = useState(null);
+  const [likesCount, setLikesCount] = useState(0);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     async function getPost() {
       try {
-        const res = await api.get(`posts/${post_id}`);
+        const res = await api.get(`posts/${postId}`);
         setPost(res.data.post);
-        setLikesCount(res.data.post.likes_count);
         setLike(res.data.post.liked);
+        setComments(res.data.comments);
       } catch (error) {
         console.error("Error fetching post:", error);
       }
     }
     getPost();
-  }, [post_id]);
+  }, [postId]);
+
+  async function addComment(text) {
+    if (!text.trim()) return;
+
+    try {
+      const res = await api.post(`posts/${postId}/comments`, { body: text });
+      const newComment = {
+        ...res.data.comment,
+        user: {
+          id: user.id,
+          username: user.username,
+          avatar: user.avatar,
+        },
+      };
+      console.log("New comment added:", newComment);
+
+      setComments((prev) => [...prev, newComment]);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  }
 
   async function handlePostLike() {
     const postId = post.id;
@@ -87,18 +113,19 @@ function PostView() {
           className='cursor-pointer flex'
           onClick={handlePostLike}
           whileTap={{ scale: 1.2 }}
-          animate={{ color: like ? "#ff2e63" : "#ccc" }}
+          animate={{ color: like ? "white" : "#ccc" }}
           transition={{ duration: 0.2 }}
         >
           {like ? (
-            <RiHeartAdd2Fill fontSize={"28px"} />
+            <FaThumbsUp fontSize={"28px"} />
           ) : (
-            <RiHeartAdd2Line fontSize={"28px"} />
+            <FaRegThumbsUp fontSize={"28px"} />
           )}
         </motion.div>
 
         <div>{likesCount}</div>
       </div>
+      <CommentsLayout comments={comments} addComment={addComment} />
     </div>
   );
 }

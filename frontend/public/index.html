@@ -30,7 +30,7 @@
     <style>
       #preload-spinner-container {
         font-size: 20px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         position: fixed;
         inset: 0; /* Covers the whole screen */
         display: flex;
@@ -54,20 +54,18 @@
         border-color: transparent; /* Make other borders transparent */
         border-top-color: #3b82f6; /* Tailwind: border-blue-500 */
 
-
         /* Tailwind: animate-spin */
         animation: spin 1s linear infinite;
       }
 
       .preload-spinner-text {
-         /* Tailwind: text-lg font-semibold */
-         margin-top: 1rem; /* Add some space */
-         color: white; /* Adjust color as needed */
-         font-size: 1.125rem /* 18px */;
-         line-height: 1.75rem /* 28px */;
-         font-weight: 600;
-        }
-
+        /* Tailwind: text-lg font-semibold */
+        margin-top: 1rem; /* Add some space */
+        color: white; /* Adjust color as needed */
+        font-size: 1.125rem /* 18px */;
+        line-height: 1.75rem /* 28px */;
+        font-weight: 600;
+      }
 
       @keyframes spin {
         from {
@@ -79,10 +77,10 @@
       }
     </style>
   </head>
-  <body class=" text-white">
+  <body class="text-white">
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <div id="root" ></div>
+    <div id="root"></div>
 
     <!--
 
@@ -101,7 +99,4 @@
       <p class="preload-spinner-text">Loading...</p>
     </div>
   </body>
-  </html>
-
-
-
+</html>
