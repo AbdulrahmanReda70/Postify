@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Posts\PostCommentsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostInteractionController;
@@ -44,11 +45,17 @@ Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
     Route::post('/{post}/like', [PostInteractionController::class, 'togglePostLike']);
 });
 
+Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
+    Route::post('{post}/comments', [PostCommentsController::class, 'store']);
+    Route::patch('{post}/comments/{comment}', [PostCommentsController::class, 'update']);
+    Route::patch('{post}/comments/{comment}/reactions', [PostCommentsController::class, 'updateReaction']);
+    Route::delete('{post}/comments/{comment}', [PostCommentsController::class, 'destroy']);
+});
+
 // Misc
 Route::get('/img', fn() => response()->json([
     'img' => 'posts/deYx5CcsQ7amYYPxachEJQVRVpRktb4u1MoC8bpj.jpg.webp'
 ], 200));
-
 
 // Test Route
 Route::get('/test', function () {
