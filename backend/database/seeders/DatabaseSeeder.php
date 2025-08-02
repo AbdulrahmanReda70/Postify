@@ -20,7 +20,11 @@ class DatabaseSeeder extends Seeder
             'password' => 'test@example.com'
         ]);
         
-        // Run the LikeSeeder
-        $this->call(LikeSeeder::class);
+        // Run the seeders in order
+        $this->call([
+            LikeSeeder::class,
+            PostSeeder::class,
+            CommentSeeder::class,
+        ]);
     }
 }

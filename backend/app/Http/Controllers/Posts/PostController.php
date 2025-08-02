@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Posts;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\CommentResource;
 use App\Jobs\CreatePost;
 use App\Jobs\UpdatePost;
 use App\Jobs\DeletePost;
@@ -57,10 +58,18 @@ class PostController extends Controller
     {
 
         $post = Post::where('id', $id)
+        ->with(['user'])
         ->withExists([
             'likedByUsers as liked' => fn($q) => $q->where('user_id', Auth::id())
         ])
         ->first();
+
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $loadedComments = $post->comments->load('user');
+        $comments = CommentResource::collection($loadedComments);
 
         // TODO:Change this to more cleaner way (Make this in the frontend by AuthU_id & visitedU_id)
         $canUpdate = Gate::allows('update', $post);
@@ -70,7 +79,8 @@ class PostController extends Controller
         }
 
         return response()->json([
-            'post' => $post,
+            'post' =>  $post,
+            'comments' => $comments,
             'canUpdate' => $canUpdate, // TODO: Remove this transfer the logic to the frontend
         ], 200);
     }
@@ -78,7 +88,7 @@ class PostController extends Controller
     public function getUserPost($id)
     {
 
-        $post = Post::withExists(['likedByUsers as liked'])->find($id);
+        $post = Post::with('comments')->withExists(['likedByUsers as liked'])->find($id);
         $postArr = $post->toArray();
         $postArr['likes_count'] = $post->likedByUsers()->count();
 
