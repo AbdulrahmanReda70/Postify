@@ -20,7 +20,7 @@ class PostCommentsController extends Controller
     public function store(Request $request, Post $post)
     {
         $data = $request->validate([
-        'body' => 'required|string|min:1|max:1000'
+            'body' => 'required|string|min:1|max:1000'
         ]);
         $user_id = Auth::id();
         $body = $data['body'];
@@ -48,12 +48,12 @@ class PostCommentsController extends Controller
     {
 
         $data = $request->validate([
-        'body' => 'required|string|min:1|max:1000'
+            'body' => 'required|string|min:1|max:1000'
         ]);
         $user_id = Auth::id();
         $body = $data['body'];
 
-        if($comment->user_id !== $user_id) {
+        if ($comment->user_id !== $user_id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -68,15 +68,9 @@ class PostCommentsController extends Controller
     public function updateReaction(Request $request, Post $post, Comment $comment)
     {
         $data = $request->validate([
-            'reaction' => 'required|string|in:like,dislike,love,celebrate',
-            'value' => 'required|integer|in:-1,1',
+            'type' => 'required|string|in:like,dislike,love,celebrate',
         ]);
-
-        $reaction = $data['reaction'];
-        $value = $data['value'];
-
-        $comment->{$reaction} += $value;
-        $comment->save();
+        $type = $data['type'];
 
         return response()->json([
             'comment' => $comment,
