@@ -3,11 +3,11 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { TextareaAutosize } from "@mui/material";
 import AlertPopup from "../components/popup/AlertPopup";
 import AlertDialog from "../components/popup/AlertDialog";
-import { RiHeartAdd2Fill, RiHeartAdd2Line } from "react-icons/ri";
 import Skeleton from "@mui/material/Skeleton";
-import { motion } from "framer-motion";
 import { usePosts } from "../context/PostsContext";
 import api from "../api/axios";
+import PostLikeBtn from "../components/PostLikeBtn";
+import CommentsLayout from "../components/comment/CommentsLayout";
 
 function PostEdit() {
   const [title, setTitle] = useState("");
@@ -16,15 +16,17 @@ function PostEdit() {
   const [is_open, setIs_open] = useState(false);
   const [res, setRes] = useState(null);
   const [open, setOpen] = React.useState(false);
-  const [like, setLike] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [comments, setComments] = useState([]);
   const { updatePost, allPosts } = usePosts();
 
   const location = useLocation();
-  const prev_page = location.state.from || "/";
+  const prev_page = location?.state?.from || "/";
   const navigate = useNavigate();
 
   function open_confirm() {
@@ -38,15 +40,15 @@ function PostEdit() {
   const postId = useParams().id;
 
   async function handlePostLike() {
-    setLike((prev) => !prev);
+    setIsLiked((prev) => !prev);
 
     try {
       let res = await api.post(`posts/${postId}/like`);
       if (!res.data.liked) {
-        setLike(false);
+        setIsLiked(false);
         setLikesCount((prev) => Math.max(prev - 1, 0));
       } else {
-        setLike(true);
+        setIsLiked(true);
         setLikesCount((prev) => prev + 1);
       }
     } catch (error) {
@@ -56,17 +58,21 @@ function PostEdit() {
 
   useEffect(() => {
     async function getPost() {
-      let res = await api.get(`user/posts/${postId}`);
-      setTitle(res.data.title);
-      setBody(res.data.body);
-      setImage(res.data.image_url);
-      setLikesCount(res.data.likes_count);
+      let res = await api.get(`posts/${postId}`);
+      console.log("Post data:", res.data);
+
+      setTitle(res.data.post.title);
+      setBody(res.data.post.body);
+      setImage(res.data.post.image_url);
+      setComments(res.data.comments);
+
+      setLikesCount(res.data.post.likes_count);
       setIsLoading(false);
 
-      if (res.data.liked) {
-        setLike(true);
+      if (res.data.post.liked) {
+        setIsLiked(true);
       } else {
-        setLike(false);
+        setIsLiked(false);
       }
     }
     getPost();
@@ -110,6 +116,27 @@ function PostEdit() {
       }, 1200);
     }
     setIs_open(true);
+  }
+
+  async function addComment(text) {
+    if (!text.trim()) return;
+
+    try {
+      const res = await api.post(`posts/${postId}/comments`, { body: text });
+      const newComment = {
+        ...res.data.comment,
+        user: {
+          id: user.id,
+          username: user.username,
+          avatar: user.avatar,
+        },
+      };
+      console.log("New comment added:", newComment);
+
+      setComments((prev) => [...prev, newComment]);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
   }
 
   if (isLoading) {
@@ -177,42 +204,33 @@ function PostEdit() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='Title'
-            className={`w-[600px] h-[100px] text-5xl mb-[30px] pb-[20px] `}
+            className={`w-full h-[100px] text-5xl mb-[30px] pb-[20px] `}
           />
         </div>
-        <div className='flex justify-center mb-8'>
-          <img
-            className='h-[500px] w-[100%] rounded object-cover'
-            src={preview ? preview : image}
-            alt='img'
-          />
-        </div>
+        {image && (
+          <div className='flex justify-center mb-8'>
+            <img
+              className='h-[500px] w-[100%] rounded object-cover'
+              src={preview ? preview : image}
+              alt='img'
+            />
+          </div>
+        )}
         <div>
           <TextareaAutosize
             value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder='Tell Your Story'
-            className='w-[600px]  text-2xl'
+            className='w-full text-2xl'
           />
         </div>
+        <PostLikeBtn
+          handlePostLike={handlePostLike}
+          isLiked={isLiked}
+          likesCount={likesCount}
+        />
 
-        <div className='flex gap-x-1 mt-5 items-end'>
-          <motion.div
-            className='cursor-pointer flex'
-            onClick={handlePostLike}
-            whileTap={{ scale: 1.2 }}
-            animate={{ color: like ? "#ff2e63" : "#ccc" }}
-            transition={{ duration: 0.2 }}
-          >
-            {like ? (
-              <RiHeartAdd2Fill fontSize={"28px"} />
-            ) : (
-              <RiHeartAdd2Line fontSize={"28px"} />
-            )}
-          </motion.div>
-
-          <div>{likesCount}</div>
-        </div>
+        <CommentsLayout comments={comments} addComment={addComment} />
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ use App\Http\Resources\CommentResource;
 use App\Jobs\CreatePost;
 use App\Jobs\UpdatePost;
 use App\Jobs\DeletePost;
+use App\Models\CommentReaction;
 use App\Models\Post;
 use App\Services\ImageResizer;
 use Illuminate\Support\Facades\Auth;
@@ -21,14 +22,14 @@ class PostController extends Controller
      * Display a listing of the resource.
      */
 
-     public function store(StorePostRequest $request)
-     {
-            dispatch_sync(CreatePost::fromRequest($request));
+    public function store(StorePostRequest $request)
+    {
+        dispatch_sync(CreatePost::fromRequest($request));
 
-            return response()->json([
-                'message' => 'Post created successfully!',
-             ], 201); // 201 for resource created
-     }
+        return response()->json([
+            'message' => 'Post created successfully!',
+        ], 201); // 201 for resource created
+    }
 
 
     public function getUserPosts()
@@ -54,36 +55,43 @@ class PostController extends Controller
         ], 200);
     }
 
+
     public function getPost($id)
     {
-
-        $post = Post::where('id', $id)
-        ->with(['user'])
-        ->withExists([
-            'likedByUsers as liked' => fn($q) => $q->where('user_id', Auth::id())
-        ])
-        ->first();
+        $post = Post::with(['user'])
+            ->withExists([
+                'likedByUsers as liked' => fn($q) => $q->where('user_id', Auth::id())
+            ])
+            ->find($id);
 
         if (!$post) {
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-        $loadedComments = $post->comments->load('user');
-        $comments = CommentResource::collection($loadedComments);
+        // Collect comment IDs
+        $commentIds = $post->comments->pluck('id')->toArray();
 
-        // TODO:Change this to more cleaner way (Make this in the frontend by AuthU_id & visitedU_id)
-        $canUpdate = Gate::allows('update', $post);
+        // Fetch reactions counts
+        $reactionCounts = !empty($commentIds)
+            ? CommentReaction::getReactionCountsForComments($commentIds)
+            : collect();
 
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
-        }
+        // Attach counts to each comment (no manual mapping for response)
+        $post->comments->each(function ($comment) use ($reactionCounts) {
+            $counts = $reactionCounts[$comment->id] ?? null;
+            $comment->likes = $counts->likes ?? 0;
+            $comment->dislikes = $counts->dislikes ?? 0;
+            $comment->celebrates = $counts->celebrates ?? 0;
+            $comment->loves = $counts->loves ?? 0;
+        });
 
         return response()->json([
-            'post' =>  $post,
-            'comments' => $comments,
-            'canUpdate' => $canUpdate, // TODO: Remove this transfer the logic to the frontend
+            'post' => $post,
+            'comments' => CommentResource::collection($post->comments),
         ], 200);
     }
+
+
 
     public function getUserPost($id)
     {
@@ -146,9 +154,9 @@ class PostController extends Controller
     {
         $query = request()->input('query');
 
-            $posts = Post::where('title', 'LIKE', "%{$query}%")
-                ->orWhere('body', 'LIKE', "%{$query}%")
-                ->paginate(10);
+        $posts = Post::where('title', 'LIKE', "%{$query}%")
+            ->orWhere('body', 'LIKE', "%{$query}%")
+            ->paginate(10);
 
         return response()->json($posts); // Return JSON response
     }

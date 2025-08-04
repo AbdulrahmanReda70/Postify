@@ -82,7 +82,6 @@ function PostCreate() {
             className='w-[600px] mb-80 text-2xl'
           />
         </div>
-        <CommentsLayout />
       </div>
     </div>
   );
