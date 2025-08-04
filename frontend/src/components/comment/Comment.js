@@ -1,40 +1,117 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommentIconBtn from "./CommentIconBtn";
+import api from "../../api/axios";
+import { useMemo } from "react";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
-function Comment({ avatar, username, date, body, interactions }) {
-  // State to manage the action taken on the comment
-  // This will be used to track if the user has liked, disliked, etc.
+function Comment({
+  avatar,
+  username,
+  date,
+  body,
+  likes = 0,
+  dislikes = 0,
+  loves = 0,
+  celebrates = 0,
+  commentId,
+  postId,
+  auth_reacted,
+}) {
+  // State for current user action
   const [action, setAction] = useState(null);
-
-  function handleAction(actionType) {
-    setAction(actionType);
-    console.log(`Action taken: ${actionType}`);
-  }
-
-  if (!interactions || interactions.length === 0) {
-    interactions = [{ like: 0 }, { dislike: 0 }, { love: 0 }, { celebrate: 0 }];
-  }
-
-  const InteractionsCount = interactions.map((interaction) => {
-    if (Object.keys(interaction)[0] === "like") {
-      return { "👍": interaction["like"] };
-    } else if (Object.keys(interaction)[0] === "dislike") {
-      return { "👎": interaction["dislike"] };
-    } else if (Object.keys(interaction)[0] === "love") {
-      return { "❤️": interaction["love"] };
-    } else if (Object.keys(interaction)[0] === "celebrate") {
-      return { "🎉": interaction["celebrate"] };
-    }
-    return interaction;
+  // State for counts
+  const [counts, setCounts] = useState({
+    like: likes,
+    dislike: dislikes,
+    love: loves,
+    celebrate: celebrates,
   });
 
-  console.log("Interactions Count:", InteractionsCount);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const interactionsMap = {
+    "👍": "like",
+    "👎": "dislike",
+    "❤️": "love",
+    "🎉": "celebrate",
+  };
+
+  const reverseInteractionsMap = useMemo(
+    () => ({
+      like: "👍",
+      dislike: "👎",
+      love: "❤️",
+      celebrate: "🎉",
+    }),
+    []
+  );
+
+  useEffect(() => {
+    setCounts({
+      like: likes,
+      dislike: dislikes,
+      love: loves,
+      celebrate: celebrates,
+    });
+
+    setAction(auth_reacted ? reverseInteractionsMap[auth_reacted] : null);
+  }, [
+    likes,
+    dislikes,
+    loves,
+    celebrates,
+    auth_reacted,
+    reverseInteractionsMap,
+  ]);
+
+  async function handleAction(newActionType) {
+    const prevAction = action;
+    const reactionType = interactionsMap[newActionType];
+
+    // If clicking the same action again → this will delete reaction
+    const nextAction = prevAction === newActionType ? null : newActionType;
+    setAction(nextAction);
+
+    try {
+      await api.patch(`posts/${postId}/comments/${commentId}/reactions`, {
+        type: reactionType,
+      });
+
+      // Update counts optimistically
+      setCounts((prev) => {
+        const updated = { ...prev };
+
+        // Remove previous reaction
+        if (prevAction) {
+          const prevType = interactionsMap[prevAction];
+          updated[prevType] = Math.max(0, updated[prevType] - 1);
+        }
+
+        // Add new reaction (if not removing)
+        if (nextAction) {
+          updated[reactionType] = parseInt(updated[reactionType] || 0) + 1;
+        }
+
+        return updated;
+      });
+    } catch (error) {
+      // Rollback UI on error
+      setAction(prevAction);
+      console.error("Error handling reaction:", error);
+    }
+  }
 
   return (
-    <div className='flex gap-x-2 mb-4'>
-      <div className='w-10 h-10 rounded-full overflow-hidden'>
-        <img src={avatar} alt='avatar' className='w-full h-full object-cover' />
-      </div>
+    <div className='flex gap-x-2 mb-4 justify-center'>
+      {isMobile ? null : (
+        <div className='w-10 h-10 rounded-full overflow-hidden flex-shrink-0'>
+          <img
+            src={avatar}
+            alt='avatar'
+            className='w-full h-full object-cover'
+          />
+        </div>
+      )}
 
       <div className='min-h-[150px] w-[500px] rounded outline outline-1 outline-[#3d424e]'>
         {/* Header */}
@@ -45,26 +122,26 @@ function Comment({ avatar, username, date, body, interactions }) {
           <div className='text-[#9198a1]'> {date}</div>
         </div>
 
-        <div className='flex flex-col justify-between p-[10px] gap-y-7'>
+        <div className='flex flex-col justify-between p-[10px] gap-y-7 flex-1'>
           {/* Body */}
           <div className='text-[14px] whitespace-pre-wrap'>{body}</div>
 
           {/* Interaction */}
-          <div className=''>
+          <div>
             <CommentIconBtn handleAction={handleAction} />
             {/* Reactions */}
             <div className='flex gap-x-2'>
-              {InteractionsCount.map((interaction, index) => (
+              {Object.entries(counts).map(([key, value]) => (
                 <div
-                  key={index}
+                  key={key}
                   className={`flex items-center justify-evenly text-xs w-[50px] h-[25px] border border-[#3d424e] rounded-full ${
-                    action === Object.keys(interaction)[0]
+                    action === reverseInteractionsMap[key]
                       ? "bg-[#3d424e] text-white"
                       : "bg-[#151923] text-[#9198a1]"
                   }`}
                 >
-                  <div>{Object.keys(interaction)[0]}</div>
-                  <div>{Object.values(interaction)[0]}</div>
+                  <div>{reverseInteractionsMap[key]}</div>
+                  <div>{value}</div>
                 </div>
               ))}
             </div>

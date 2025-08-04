@@ -21,6 +21,7 @@ function CommentIconBtn({ handleAction }) {
             sx: {
               borderRadius: "50%",
               backgroundColor: "rgba(0, 0, 0, 0.05)",
+              marginBottom: "5px",
               "&:hover": {
                 backgroundColor: "rgba(25, 118, 210, 0.1)",
               },

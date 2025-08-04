@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import avatar from "../../images/signin.jpg";
 import { Textarea, Button } from "@mui/joy";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 function WriteComment({ onAddComment }) {
   const [text, setText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
+  const isMobile = useMediaQuery("(max-width: 768px)");
   async function handleSubmit() {
     setIsSubmitting(true);
     await onAddComment(text);
@@ -14,17 +16,24 @@ function WriteComment({ onAddComment }) {
   }
 
   return (
-    <div className='flex gap-x-2'>
-      {/* Avatar */}
-      <div className='w-10 h-10 rounded-full overflow-hidden'>
-        <img src={user?.avatar} alt='' className='w-[100%] h-[100%]' />
-      </div>
+    <div className='flex gap-x-2 mb-11'>
+      {isMobile ? null : (
+        <>
+          {/* Avatar */}
+          <div className='w-10 h-10 rounded-full overflow-hidden flex-shrink-0'>
+            <img
+              src={user?.avatar}
+              alt=''
+              className='w-full h-full object-cover'
+            />
+          </div>
+        </>
+      )}
 
       {/* Textarea and Button */}
-      <div>
+      <div className='flex-1'>
         <Textarea
           sx={{
-            width: "500px",
             minHeight: "200px",
             backgroundColor: "unset",
             padding: "15px",
