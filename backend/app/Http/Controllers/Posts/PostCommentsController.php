@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePostComment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
+use App\Models\CommentReaction;
 use App\Models\Post;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger;
+
+use function PHPSTORM_META\type;
 
 class PostCommentsController extends Controller
 {
@@ -30,10 +34,6 @@ class PostCommentsController extends Controller
             'post_id' => $post_id,
             'user_id' => $user_id,
             'body' => $body,
-            'like' => 0,
-            'dislike' => 0,
-            'love' => 0,
-            'celebrate' => 0
         ]);
 
         return response()->json([
@@ -65,16 +65,65 @@ class PostCommentsController extends Controller
         ]);
     }
 
-    public function updateReaction(Request $request, Post $post, Comment $comment)
+    public function updateCommentReactions(Request $request, Post $post, Comment $comment)
     {
-        $data = $request->validate([
-            'type' => 'required|string|in:like,dislike,love,celebrate',
-        ]);
-        $type = $data['type'];
+        try {
+            $data = $request->validate([
+                'type' => 'required|string|in:like,dislike,love,celebrate',
+            ]);
 
-        return response()->json([
-            'comment' => $comment,
-        ]);
+            $type = $data['type'];
+            $user_id = Auth::id();
+
+            $prev_reaction = CommentReaction::where('user_id', $user_id)
+                ->where('comment_id', $comment->id)
+                ->first();
+
+            // if there is no reaction exist create new one
+            if (!$prev_reaction) {
+                CommentReaction::create([
+                    'user_id' => $user_id,
+                    'comment_id' => $comment->id,
+                    'reaction_type' => $type
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Comment reaction created successfully'
+                ], 201);
+            }
+
+            $prev_reaction_type = $prev_reaction->reaction_type;
+
+            // if reaction exist but not the same type -> update
+            if ($prev_reaction_type !== $type) {
+                $prev_reaction->reaction_type = $type;
+                $prev_reaction->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Comment reaction updated successfully'
+                ], 200);
+            }
+
+            // if reaction exist and the same type -> delete
+            if ($prev_reaction_type === $type) {
+                $prev_reaction->delete();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Comment reaction deleted successfully'
+                ], 200);
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to process reaction'
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while processing the reaction',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
     Route::delete('/', [ProfileController::class, 'deleteUserAccount']);
     Route::get('/posts', [PostController::class, 'getUserPosts']);
     Route::get('/posts/saved', [PostController::class, 'getSavedPosts']);
-    Route::get('/posts/{id}', [PostController::class, 'getUserPost']); // for edit/delete
 });
 
 // Visited User Profile
@@ -48,7 +47,7 @@ Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
 Route::middleware('auth:sanctum')->prefix('posts')->group(function () {
     Route::post('{post}/comments', [PostCommentsController::class, 'store']);
     Route::patch('{post}/comments/{comment}', [PostCommentsController::class, 'update']);
-    Route::patch('{post}/comments/{comment}/reactions', [PostCommentsController::class, 'updateReaction']);
+    Route::patch('{post}/comments/{comment}/reactions', [PostCommentsController::class, 'updateCommentReactions']);
     Route::delete('{post}/comments/{comment}', [PostCommentsController::class, 'destroy']);
 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class CommentResource extends JsonResource
 {
@@ -17,17 +18,17 @@ class CommentResource extends JsonResource
         return [
             'id' => $this->id,
             'body' => $this->body,
-            'interactions' => [
-                ['like' => $this->like],
-                ['dislike' => $this->dislike],
-                ['love' => $this->love],
-                ['celebrate' => $this->celebrate],
-            ],
             'created_at' => $this->created_at->diffForHumans(),
-            'updated_at' => $this->updated_at->diffForHumans(),
             'user_id' => $this->user_id,
             'post_id' => $this->post_id,
-            'user' => new UserResource($this->whenLoaded('user'))
+            'user' => new UserResource($this->whenLoaded('user')),
+            'likes' => $this->likes ?? 0,
+            'dislikes' => $this->dislikes ?? 0,
+            'celebrates' => $this->celebrates ?? 0,
+            'loves' => $this->loves ?? 0,
+            'auth_reacted' => $this->reactions
+                ->where('user_id', Auth::id())
+                ->first()?->reaction_type
         ];
     }
 }
