@@ -17,15 +17,14 @@ class CreatePost implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct
-    (
+    public function __construct(
         private string $title,
         private string $body,
         private ?string $imagePath,
+    ) {}
 
-    ){}
-
-    public static function fromRequest(StorePostRequest $request){
+    public static function fromRequest(StorePostRequest $request)
+    {
 
         $imagePath = null;
 
@@ -46,14 +45,13 @@ class CreatePost implements ShouldQueue
      * Execute the job.
      */
     public function handle(): void
-{
+    {
 
-    Post::create([
-        'user_id' => Auth::id(),
-        'title' => $this->title,
-        'body' => $this->body,
-        'image' => $this->imagePath,
-    ]);
-}
-
+        Post::create([
+            'user_id' => Auth::id(),
+            'title' => $this->title,
+            'body' => $this->body,
+            'image' => $this->imagePath,
+        ]);
+    }
 }
