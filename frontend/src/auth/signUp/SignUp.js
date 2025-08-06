@@ -4,14 +4,8 @@ import signupImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import AlertPopup from "../../components/popup/AlertPopup";
 import { FcGoogle } from "react-icons/fc";
-import {
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  useMediaQuery,
-} from "@mui/material";
+import { useMediaQuery } from "@mui/material";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 let apiUrl = process.env.REACT_APP_API_URL;
 
@@ -20,8 +14,9 @@ function SignUp() {
   const [username, setUsername] = useState(""); // New state for username
   const [password, setPassword] = useState("");
   const [password_confirm, setPassword_confirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
   const [is_open, setIs_open] = useState(false);
   const [res, setRes] = useState(null);
   const nav = useNavigate();
@@ -35,21 +30,12 @@ function SignUp() {
       return null;
     }
 
-    if (!gender) {
-      setRes({ error: true, message: "Please select your gender" });
-      setIs_open(true);
-      return null;
-    }
-
-    let { response, data } = await signup(`${apiUrl}register`,
-      {
-        username,
-        password,
-        password_confirm,
-        email,
-        gender,
-      }
-    );
+    let { response, data } = await signup(`${apiUrl}register`, {
+      username,
+      password,
+      password_confirm,
+      email,
+    });
 
     if (!response.ok) {
       setRes({ error: true, message: data.message || data.error });
@@ -92,56 +78,54 @@ function SignUp() {
             />
           </div>
 
-          <div>
+          <div className='relative'>
             <label htmlFor='password'>Password</label>
-            <input
-              type='password'
-              id='password'
-              onChange={(e) => setPassword(e.target.value)}
-              className='w-[100%]'
-            />
-            <div>
-              <label htmlFor='password_confirm'>Confirm Password</label>
+            <div className='relative'>
               <input
-                type='password'
-                id='password_confirm'
-                onChange={(e) => setPassword_confirm(e.target.value)}
-                className='w-[100%]'
+                type={showPassword ? "text" : "password"}
+                id='password'
+                onChange={(e) => setPassword(e.target.value)}
+                className='w-[100%] m-0'
               />
+              <div
+                className='absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer'
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible size={20} />
+                ) : (
+                  <AiOutlineEye size={20} />
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Gender Selection */}
-          <div className='mt-1  '>
-            <FormControl component='fieldset'>
-              <FormLabel component='legend' className='sr-only'>
-                Gender
-              </FormLabel>
-              <RadioGroup
-                row
-                aria-label='gender'
-                name='gender'
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
+          <div className='relative mt-3'>
+            <label htmlFor='password_confirm'>Confirm Password</label>
+            <div className='relative'>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id='password_confirm'
+                onChange={(e) => setPassword_confirm(e.target.value)}
+                className='w-[100%] m-0'
+              />
+              <div
+                className='absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer'
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                <FormControlLabel
-                  value='male'
-                  control={<Radio />}
-                  label='Male'
-                />
-                <FormControlLabel
-                  value='female'
-                  control={<Radio />}
-                  label='Female'
-                />
-              </RadioGroup>
-            </FormControl>
+                {showConfirmPassword ? (
+                  <AiOutlineEyeInvisible size={20} />
+                ) : (
+                  <AiOutlineEye size={20} />
+                )}
+              </div>
+            </div>
           </div>
 
           <button
             type='submit'
             onClick={submit_form}
-            className='btn font-bold bg-green !mt-[10px] '
+            className='btn font-bold bg-green !mt-4'
           >
             Signup
           </button>

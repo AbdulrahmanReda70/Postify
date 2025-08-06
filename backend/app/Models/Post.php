@@ -11,7 +11,7 @@ class Post extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id', 'title', 'body', 'image'];
-    protected $appends = ['likes_count','is_saved', 'image_url'];
+    protected $appends = ['likes_count', 'is_saved', 'image_url'];
 
 
     public function getIsSavedAttribute()
@@ -26,10 +26,10 @@ class Post extends Model
 
     public function getImageUrlAttribute()
     {
-        if(app()->environment('local')) {
+        if (app()->environment('local')) {
             return $this->image
-            ? 'http://localhost:8000/storage/' . $this->image
-            : null;
+                ? 'http://localhost:8000/storage/' . $this->image
+                : null;
         }
         return $this->image ? Storage::disk(config('filesystems.default'))->url($this->image) : null;
     }
@@ -64,10 +64,11 @@ class Post extends Model
             ->paginate(5);
     }
 
-    public function scopeForAuthenticatedUser($query){
+    public function scopeForAuthenticatedUser($query)
+    {
 
         return $query->where('user_id', Auth::id())
-        ->withExists('savedByUsers as is_saved')
-        ->latest();
+            ->withExists('savedByUsers as is_saved')
+            ->latest();
     }
 }

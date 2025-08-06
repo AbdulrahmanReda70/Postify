@@ -30,8 +30,27 @@ input {
   border: white solid 1px;
   height: 38px;
   margin-bottom: 12px;
-  padding-left: 5px;
+  padding-left: 8px;
   padding-right: 5px;
+  font-size: 14px;
+}
+
+/* To prevent browser auto-fill background color (especially in Chrome) */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  -webkit-text-fill-color: white !important;
+}
+
+/* For Firefox */
+input:-moz-autofill {
+  box-shadow: 0 0 0px 1000px transparent inset;
+  -moz-text-fill-color: white !important;
 }
 
 textarea {

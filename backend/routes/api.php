@@ -58,14 +58,5 @@ Route::get('/img', fn() => response()->json([
 
 // Test Route
 Route::get('/test', function () {
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Test API route is working!',
-        'timestamp' => now(),
-        'data' => [
-            'server_time' => date('Y-m-d H:i:s'),
-            'environment' => config('app.env'),
-            'debug' => config('app.debug')
-        ]
-    ], 200);
+    return response()->json(config('filesystems.default'));
 });

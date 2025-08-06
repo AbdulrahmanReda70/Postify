@@ -127,9 +127,9 @@ class PostController extends Controller
 
 
 
-    public function update(UpdatePostRequest $request, Post $post, ImageResizer $imageResizer)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        dispatch_sync(UpdatePost::fromRequest($request, $post, $imageResizer));
+        dispatch_sync(UpdatePost::fromRequest($request, $post));
 
         $post->refresh();
 

@@ -1,5 +1,3 @@
-// src/GoogleCallback.js
-
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveUserInfo } from "../api/authService";
@@ -11,7 +9,7 @@ function GoogleCallback() {
   const nav = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/auth/callback${location.search}`, {
+    fetch(`${process.env.REACT_APP_API_URL}auth/callback${location.search}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

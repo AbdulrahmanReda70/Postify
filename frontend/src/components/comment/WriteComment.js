@@ -37,6 +37,7 @@ function WriteComment({ onAddComment }) {
             minHeight: "200px",
             backgroundColor: "unset",
             padding: "15px",
+            color: "white",
           }}
           placeholder='Write a Comment...'
           variant='outlined'

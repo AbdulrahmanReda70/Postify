@@ -18,9 +18,6 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
-
-const GOOGLE_CLIENT_ID =
-  "284609296896-t6pojjda9iep8e5ho79fvq192qf572tq.apps.googleusercontent.com";
 const root = createRoot(document.getElementById("root"));
 
 root.render(
@@ -28,7 +25,7 @@ root.render(
     <JoyCssVarsProvider>
       <CssBaseline enableColorScheme />
       <PostsProvider>
-        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
           <ValidTokenContext>
             <App />
           </ValidTokenContext>

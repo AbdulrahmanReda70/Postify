@@ -4,7 +4,7 @@ const LoginGoogle = () => {
   const handleSuccess = async (response) => {
     try {
       const res = await fetch(
-        "http://localhost:8000/api/auth/google/callback",
+        `${process.env.REACT_APP_API_URL}auth/google/callback`,
         {
           method: "POST",
           headers: {

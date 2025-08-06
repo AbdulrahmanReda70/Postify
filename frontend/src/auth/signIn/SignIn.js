@@ -5,6 +5,7 @@ import signinImg from "../../images/chuttersnap-u-vmeJcJ-Z4-unsplash.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import AlertPopup from "../../components/popup/AlertPopup";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 let apiUrl = process.env.REACT_APP_API_URL;
 
@@ -12,6 +13,7 @@ function SignIn() {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [is_open, setIs_open] = useState(false);
   const [res, setRes] = useState(null);
@@ -54,12 +56,24 @@ function SignIn() {
           </div>
           <div>
             <label htmlFor='password'>Password</label>
-            <input
-              type='password'
-              id='password'
-              onChange={(e) => setPassword(e.target.value)}
-              className='w-[100%]'
-            />
+            <div className='relative w-[100%]'>
+              <input
+                type={showPassword ? "text" : "password"}
+                id='password'
+                onChange={(e) => setPassword(e.target.value)}
+                className='w-[100%] m-0'
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer'
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible className='w-[20px] ' />
+                ) : (
+                  <AiOutlineEye className='w-[20px] ' />
+                )}
+              </span>
+            </div>
           </div>
           <button
             type='submit'
