@@ -15,6 +15,9 @@ class CommentReaction extends Model
         'comment_id',
     ];
 
+
+
+
     public function user()
     {
         return $this->belongsTo(User::class);

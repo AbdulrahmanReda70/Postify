@@ -10,6 +10,12 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = ['post_id', 'user_id', 'body', 'like', 'dislike', 'love', 'celebrate'];
+    protected $appends = ['user_data'];
+
+    public function getUserDataAttribute()
+    {
+        return $this->user;
+    }
 
     public function user()
     {

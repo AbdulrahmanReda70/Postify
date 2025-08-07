@@ -24,7 +24,7 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'min:5',
             'body' => 'min:20',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3048', // 3MB max size
         ];
     }
 }
