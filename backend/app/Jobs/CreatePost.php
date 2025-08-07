@@ -9,6 +9,7 @@ use App\Services\ImageResizer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CreatePost implements ShouldQueue
 {
@@ -31,7 +32,28 @@ class CreatePost implements ShouldQueue
         if ($request->hasFile('image')) {
             // Get the uploaded image
             $image = $request->file('image');
-            $imagePath = $image->store('posts/images', config('filesystems.default'));
+            
+            try {
+                $imagePath = $image->store('posts/images', 's3');
+                Log::info('Image uploaded successfully to S3', [
+                    'path' => $imagePath,
+                    'original_name' => $image->getClientOriginalName(),
+                    'size' => $image->getSize()
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to upload image to S3', [
+                    'error' => $e->getMessage(),
+                    'original_name' => $image->getClientOriginalName()
+                ]);
+                throw $e;
+            }
+            
+            if (!$imagePath) {
+                Log::error('Image upload returned null/false', [
+                    'original_name' => $image->getClientOriginalName()
+                ]);
+                throw new \Exception('Failed to upload image to S3');
+            }
         }
 
         return new self(

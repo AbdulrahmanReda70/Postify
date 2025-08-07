@@ -60,3 +60,8 @@ Route::get('/img', fn() => response()->json([
 Route::get('/test', function () {
     return response()->json(config('filesystems.default'));
 });
+
+Route::get('/test-s3', function () {
+    $result = Storage::disk('s3')->put('test.txt', 'This is a test file.');
+    return $result ? 'Success' : 'Failed';
+});
