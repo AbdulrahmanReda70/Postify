@@ -32,9 +32,10 @@ class CreatePost implements ShouldQueue
         if ($request->hasFile('image')) {
             // Get the uploaded image
             $image = $request->file('image');
-            
+
             try {
-                $imagePath = $image->store('posts/images', 's3');
+                // Store on the app's configured default filesystem disk
+                $imagePath = $image->store('posts/images', config('filesystems.default'));
                 Log::info('Image uploaded successfully to S3', [
                     'path' => $imagePath,
                     'original_name' => $image->getClientOriginalName(),
@@ -47,7 +48,7 @@ class CreatePost implements ShouldQueue
                 ]);
                 throw $e;
             }
-            
+
             if (!$imagePath) {
                 Log::error('Image upload returned null/false', [
                     'original_name' => $image->getClientOriginalName()

@@ -26,12 +26,19 @@ class Post extends Model
 
     public function getImageUrlAttribute()
     {
-        if (app()->environment('local')) {
-            return $this->image
-                ? 'http://localhost:8000/storage/' . $this->image
-                : null;
+        if (!$this->image) {
+            return null;
         }
-        return $this->image ? Storage::disk(config('filesystems.default'))->url($this->image) : null;
+
+        // Always use public disk for URL generation since that's web-accessible
+        $url = Storage::disk('public')->url($this->image);
+
+        // If URL is relative (starts with /), make it absolute
+        if (str_starts_with($url, '/')) {
+            return config('app.url') . $url;
+        }
+
+        return $url;
     }
 
     public function user()
