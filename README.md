@@ -33,8 +33,8 @@ Currently in its early development stage.<br><br>
 | Zod (Validation)           | Laravel Debugbar          |
 | React Hook Form            | Pest (Testing)            |
 | Material UI (MUI)          | FakerPHP                  |
-| Font Awesome               |                           |
-| Heroicons                  |                           |
+| Font Awesome               | Redis                          |
+| Heroicons                  | Docker                          |
 | Emotion (CSS-in-JS)        |                           |
 | React Icons                |                           |
 | Testing Library (React)    |                           |
