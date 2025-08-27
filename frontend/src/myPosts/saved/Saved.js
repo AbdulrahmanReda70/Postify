@@ -9,7 +9,8 @@ function Saved() {
     async function getPosts() {
       let res = await api.get("user/posts/saved");
       if (!res.error) {
-        const posts = res.data.posts;
+        let posts = res.data.posts;
+
         addPostsToSection(posts, "saved");
       }
       setLoadSavedPosts(false);

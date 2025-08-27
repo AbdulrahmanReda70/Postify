@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\PostPublished;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use App\Models\User;
@@ -70,11 +71,13 @@ class CreatePost implements ShouldQueue
     public function handle(): void
     {
 
-        Post::create([
+        $post = Post::create([
             'user_id' => Auth::id(),
             'title' => $this->title,
             'body' => $this->body,
             'image' => $this->imagePath,
         ]);
+
+        event(new PostPublished($post));
     }
 }

@@ -79,52 +79,60 @@ function DisplayHomePosts({ pageTitle }) {
       {!loadHomePosts ? (
         <>
           {allPosts.home.allIds.length !== 0 ? (
-            allPosts.home.allIds.map((id, index) => {
-              const user = allPosts.byId[id].user;
-              const title = allPosts.byId[id].title;
-              const created_at = allPosts.byId[id].created_at;
-              const image = allPosts.byId[id].image_url;
-              const is_saved = allPosts.byId[id].is_saved;
-              const section = allPosts.byId[id].section;
-              const canUpdate = allPosts.byId[id].canUpdate;
+            allPosts.home.allIds
+              .map((id, index) => {
+                const post = allPosts.byId[id];
 
-              return (
-                <Link
-                  state={{ from: location.pathname }}
-                  to={`/${viewOrEditPost(canUpdate)}/${id}`}
-                  className='mb-5 block'
-                  key={index}
-                >
-                  <div className='flex gap-x-[10px] max-w-[680px] justify-between break-all'>
-                    <div className='w-[100%] flex flex-col justify-center gap-y-[12px]'>
-                      {}
-                      <div>
-                        {<DisplayUser user={user} />}
-                        <h1 className='text-2xl font-bold'>{title}</h1>
-                      </div>
+                // Safety check - skip if post doesn't exist
+                if (!post) return null;
 
-                      <div className='flex mb-[10px] gap-x-[20px] items-center'>
-                        {displayDate(created_at)}
-                        <div className='flex items-center gap-2 z-10'>
-                          <SaveIcon
-                            onClick={(e) =>
-                              handleSavePost(e, { id, is_saved, section })
-                            }
-                            isSaved={is_saved}
-                          />
+                const user = post.user;
+                const title = post.title || "";
+                const created_at = post.created_at;
+                const image = post.image_url;
+                const is_saved = post.is_saved || false;
+                const section = post.section;
+                const canUpdate = post.canUpdate || false;
+
+                return (
+                  <Link
+                    state={{ from: location.pathname }}
+                    to={`/${viewOrEditPost(canUpdate)}/${id}`}
+                    className='mb-5 block'
+                    key={index}
+                  >
+                    <div className='flex gap-x-[10px] max-w-[680px] justify-between break-all'>
+                      <div className='w-[100%] flex flex-col justify-center gap-y-[12px]'>
+                        <div>
+                          {user && <DisplayUser user={user} />}
+                          <h1 className='text-2xl font-bold'>{title}</h1>
+                        </div>
+
+                        <div className='flex mb-[10px] gap-x-[20px] items-center'>
+                          {created_at && displayDate(created_at)}
+                          <div className='flex items-center gap-2 z-10'>
+                            <SaveIcon
+                              onClick={(e) =>
+                                handleSavePost(e, { id, is_saved, section })
+                              }
+                              isSaved={is_saved}
+                            />
+                          </div>
                         </div>
                       </div>
+                      {image && (
+                        <img
+                          src={image}
+                          alt=''
+                          className='w-[150px] min-w-[150px] h-[140px] object-cover'
+                        />
+                      )}
                     </div>
-                    <img
-                      src={image}
-                      alt=''
-                      className='w-[150px] min-w-[150px] h-[140px] object-cover'
-                    />
-                  </div>
-                  <div className='h-[1px] w-[70%] bg-secondary mb-[25px]'></div>
-                </Link>
-              );
-            })
+                    <div className='h-[1px] w-[70%] bg-secondary mb-[25px]'></div>
+                  </Link>
+                );
+              })
+              .filter(Boolean) // Remove null entries
           ) : (
             <></>
           )}

@@ -6,15 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\CommentResource;
-use App\Jobs\CreatePost;
-use App\Jobs\UpdatePost;
-use App\Jobs\DeletePost;
-use App\Models\CommentReaction;
 use App\Models\Post;
-use App\Services\ImageResizer;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Gate;
+use App\Services\Posts\PostService;
 
 class PostController extends Controller
 {
@@ -22,127 +15,81 @@ class PostController extends Controller
      * Display a listing of the resource.
      */
 
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request, PostService $postService)
     {
-        dispatch_sync(CreatePost::fromRequest($request));
-
+        // dispatch_sync(CreatePost::fromRequest($request));
+        $post = $postService->createPost($request);
         return response()->json([
             'message' => 'Post created successfully!',
+            'post' => $post
         ], 201); // 201 for resource created
     }
 
 
-    public function getUserPosts()
+    public function getUserPosts(PostService $postService)
     {
-        $posts = Post::forAuthenticatedUser()
-            ->get()
-            ->map(function ($post) {
-                $post->section = 'history';
-                return $post;
-            });
+        $posts = $postService->getCurrentUserPosts();
 
         return response()->json([
             'posts' => $posts
         ], 200);
     }
 
-    public function getSavedPosts()
+    public function getSavedPosts(PostService $postService)
     {
-        $posts = Auth::user()->savedPosts()->with('user')->latest()->get();
+        $posts = $postService->getCurrentUserSavedPosts();
 
         return response()->json([
             'posts' => $posts
         ], 200);
     }
 
-
-    public function getPost($id)
+    public function getPost($id, PostService $postService)
     {
-        $post = Post::with(['user'])
-            ->withExists([
-                'likedByUsers as liked' => fn($q) => $q->where('user_id', Auth::id())
-            ])
-            ->find($id);
+        $result = $postService->getPost($id);
 
-        if (!$post) {
+        if (!$result) {
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-        // Collect comment IDs
-        $commentIds = $post->comments->pluck('id')->toArray();
-
-        // Fetch reactions counts
-        $reactionCounts = !empty($commentIds)
-            ? CommentReaction::getReactionCountsForComments($commentIds)
-            : collect();
-
-        // Attach counts to each comment (no manual mapping for response)
-        $post->comments->each(function ($comment) use ($reactionCounts) {
-            $counts = $reactionCounts[$comment->id] ?? null;
-            $comment->likes = $counts->likes ?? 0;
-            $comment->dislikes = $counts->dislikes ?? 0;
-            $comment->celebrates = $counts->celebrates ?? 0;
-            $comment->loves = $counts->loves ?? 0;
-        });
-
         return response()->json([
-            'post' => $post,
-            'comments' => CommentResource::collection($post->comments),
+            'post' => $result['post'],
+            'comments' => CommentResource::collection($result['comments']),
         ], 200);
     }
 
-
-
-    public function getUserPost($id)
+    public function getUserPost($id, PostService $postService)
     {
+        $postArr = $postService->getUserPost($id);
 
-        $post = Post::with('comments')->withExists(['likedByUsers as liked'])->find($id);
-        $postArr = $post->toArray();
-        $postArr['likes_count'] = $post->likedByUsers()->count();
-
-        if (!$post) {
+        if (!$postArr) {
             return response()->json(['message' => 'Post not found'], 404);
         }
+
         return response()->json($postArr);
     }
 
-    public function getHomePosts()
+    public function getHomePosts(PostService $postService)
     {
-
-        $page = request()->get('page', 1);
-        $home_posts = Cache::remember('home_posts_page_' . $page, now()->addMinutes(10), function () {
-            return Post::getHomePosts();
-        });
-
-        $posts = $home_posts->getCollection()->slice(1)->values();
-        foreach ($posts as $p) {
-            $p['section'] = 'home';
-            $p['canUpdate'] = Gate::allows('canEdit', $p); // TODO: Remove this
-        }
-
-        $home_posts = $home_posts->setCollection($posts);
+        $home_posts = $postService->getHomePosts();
 
         return response()->json(['posts' => $home_posts], 200);
     }
 
-
-
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post, PostService $postService)
     {
-        dispatch_sync(UpdatePost::fromRequest($request, $post));
-
-        $post->refresh();
+        $updatedPost = $postService->updatePost($request, $post);
 
         return response()->json([
             'message' => 'Post updated successfully!',
-            'post' => $post,
+            'post' => $updatedPost,
         ], 200);
     }
 
 
-    public function destroy(Post $post)
+    public function destroy(Post $post, PostService $postService)
     {
-        dispatch_sync(new DeletePost($post));
+        $postService->deletePost($post);
 
         return response()->json([
             'message' => 'Post deleted successfully!',
@@ -150,13 +97,10 @@ class PostController extends Controller
     }
 
     // TODO: use Laravel Scout instead of this
-    public function postSearch()
+    public function postSearch(PostService $postService)
     {
-        $query = request()->input('query');
-
-        $posts = Post::where('title', 'LIKE', "%{$query}%")
-            ->orWhere('body', 'LIKE', "%{$query}%")
-            ->paginate(10);
+        $query = request()->input('query') || '';
+        $posts = $postService->searchPosts($query);
 
         return response()->json($posts); // Return JSON response
     }

@@ -23,7 +23,7 @@ function PostEdit() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [comments, setComments] = useState([]);
-  const { updatePost, allPosts } = usePosts();
+  const { updatePost, deletePost, allPosts } = usePosts();
 
   const location = useLocation();
   const prev_page = location?.state?.from || "/";
@@ -111,8 +111,12 @@ function PostEdit() {
       setRes({ error: true, message: response.message });
     } else {
       setRes({ error: false, message: response.data.message });
+      console.log(allPosts, "}{}{{}");
+
+      deletePost(postId);
       setTimeout(() => {
-        navigate(prev_page, { replace: true });
+        navigate("/posts/history", { replace: true });
+        console.log(allPosts, "_______________");
       }, 1200);
     }
     setIs_open(true);

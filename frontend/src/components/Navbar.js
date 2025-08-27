@@ -86,7 +86,7 @@ function Navbar() {
                         Posts
                       </NavLink>
                       {/* Submenu */}
-                      <div className='absolute z-30 left-0 mt-[5px] hidden w-40 bg-gray-800 shadow-lg group-hover:flex flex-col'>
+                      <div className='absolute z-30 left-0 mt-[4px] hidden w-40 bg-gray-800 shadow-lg group-hover:flex flex-col'>
                         <div className='h-[5px] bg-#1f2937 w-[100%]'></div>
                         <NavLink
                           state={{ from: location.pathname }}

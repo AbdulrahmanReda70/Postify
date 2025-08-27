@@ -13,7 +13,6 @@ class Post extends Model
     protected $fillable = ['user_id', 'title', 'body', 'image'];
     protected $appends = ['likes_count', 'is_saved', 'image_url'];
 
-
     public function getIsSavedAttribute()
     {
         return $this->savedByUsers()->where('user_id', Auth::id())->exists();
@@ -73,7 +72,6 @@ class Post extends Model
 
     public function scopeForAuthenticatedUser($query)
     {
-
         return $query->where('user_id', Auth::id())
             ->withExists('savedByUsers as is_saved')
             ->latest();

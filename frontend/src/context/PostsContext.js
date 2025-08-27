@@ -35,23 +35,26 @@ export function PostsProvider({ children }) {
 
   function addPostsToSection(posts, section) {
     setAllPosts((p) => {
+      const receivedPostIds = [];
       const currentById = p.byId;
-      const currentAllIds = p.home.allIds;
+      const currentAllIds = p[section].allIds;
 
       const newById = { ...currentById };
-      const newAllIds = [...currentAllIds];
+      // const newAllIds = [...currentAllIds];
 
       posts.forEach((newPost) => {
-        if (newPost.id) {
-          // if the post exist we will merge it
+        if (newPost?.id != null) {
+          // if the post exist merge it
           const id = newPost.id;
           const oldPost = allPosts.byId[id];
           newById[newPost.id] = { ...oldPost, ...newPost };
         } else {
           newById[newPost.id] = newPost;
         }
-        newAllIds.push(newPost.id);
+        receivedPostIds.push(newPost.id);
       });
+
+      const newAllIds = [...new Set([...currentAllIds, ...receivedPostIds])];
 
       return {
         ...p,
@@ -63,24 +66,25 @@ export function PostsProvider({ children }) {
     });
   }
 
-  function removeSavedPost(id) {
-    const savedPostsById = allPosts.saved.byId;
-    const savedPostsAllIds = allPosts.saved.allIds;
+  function deletePost(postId) {
+    setAllPosts((prev) => {
+      // Remove post from byId
+      const newById = { ...prev.byId };
+      delete newById[postId];
 
-    const newSavedPostsById = Object.fromEntries(
-      Object.entries(savedPostsById).filter((ele) => ele[0] !== String(id))
-    );
+      // Remove post ID from all sections
+      const newState = { ...prev, byId: newById };
 
-    const newSavedPostsAllIds = savedPostsAllIds.filter((ele) => ele !== id);
+      Object.keys(newState).forEach((key) => {
+        if (key !== "byId" && newState[key]?.allIds) {
+          newState[key] = {
+            ...newState[key],
+            allIds: newState[key].allIds.filter((id) => id !== postId),
+          };
+        }
+      });
 
-    setAllPosts((p) => {
-      return {
-        ...p,
-        saved: {
-          byId: { ...newSavedPostsById },
-          allIds: newSavedPostsAllIds,
-        },
-      };
+      return newState;
     });
   }
 
@@ -88,6 +92,10 @@ export function PostsProvider({ children }) {
     setAllPosts((prev) => {
       // Copy the existing post from global byId
       const existingPost = prev.byId[postId];
+
+      const newSavedPostsIds = prev.saved.allIds.filter(
+        (currPId) => currPId !== postId
+      );
       if (!existingPost) return prev; // avoid crash if post doesn't exist
 
       // Toggle is_saved
@@ -98,6 +106,9 @@ export function PostsProvider({ children }) {
 
       return {
         ...prev,
+        saved: {
+          allIds: newSavedPostsIds,
+        },
         byId: {
           ...prev.byId,
           [postId]: updatedPost,
@@ -128,7 +139,7 @@ export function PostsProvider({ children }) {
     <postsContext.Provider
       value={{
         updatePost,
-        removeSavedPost,
+        deletePost,
         setAllPosts,
         toggleSavedPostState,
         addPostsToSection,

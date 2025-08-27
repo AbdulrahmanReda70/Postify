@@ -4,88 +4,56 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Auth\Events\Login;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Services\Users\UserAuthService;
 use Illuminate\Http\JsonResponse;
-use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request, UserAuthService $authService)
     {
+        $credentials = $request->only(['email', 'password']);
+        $result = $authService->login($credentials);
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$result) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'user signed in successfully ',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'username' => $user->username,
-                'user_role' => $user->user_role,
-                'avatar' => $user->avatar,
-                'description' => $user->description
-            ]
-        ]);
+        return response()->json($result);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request, UserAuthService $authService)
     {
-        $request->user()->tokens()->delete();
+        $authService->logout($request->user());
         return response()->json(['message' => 'Logged out successfully']);
     }
 
-    public function redirectToAuth(): JsonResponse
+    public function redirectToAuth(UserAuthService $authService): JsonResponse
     {
         return response()->json([
-            'url' => Socialite::driver('google')
-                ->stateless()
-                ->redirect()
-                ->getTargetUrl(),
+            'url' => $authService->getGoogleAuthUrl(),
         ]);
     }
 
     public function handleAuthCallback(): JsonResponse
     {
+        // keep original behavior while delegating to the service if needed
         try {
-            /**
-             * Retrieve the authenticated user's information from Google using Socialite.
-             *
-             * This method uses the Socialite package to interact with Google's OAuth2 API.
-             * It retrieves the user's details in a stateless manner, which is useful for
-             * APIs or applications that do not use session state.
-             *
-             * @return \Laravel\Socialite\Contracts\User The authenticated user's information.
-             *
-             * @throws \Laravel\Socialite\Two\InvalidStateException If the state validation fails.
-             * @throws \GuzzleHttp\Exception\GuzzleException If there is an HTTP request error.
-             */
-            $socialiteUser = Socialite::driver('google')->stateless()->user();
-        } catch (ClientException $e) {
+            $socialiteUser = \Laravel\Socialite\Facades\Socialite::driver('google')->stateless()->user();
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            Log::error('Socialite callback failed', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
 
-        $user = User::firstOrCreate(
-            [
-                'email' => $socialiteUser->getEmail(),
-            ],
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => $socialiteUser->getEmail()],
             [
                 'username' => $socialiteUser->getName(),
                 'password' => '',
                 'user_role' => 'admin',
-                'avatar' => $socialiteUser->getAvatar(), // Use getAvatar() to retrieve the profile picture
+                'avatar' => $socialiteUser->getAvatar(),
             ]
         );
 

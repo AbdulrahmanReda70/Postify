@@ -15,7 +15,7 @@ function History() {
     async function getPosts() {
       let res = await api.get("user/posts");
       if (!res.error) {
-        const posts = res.data.posts;
+        let posts = res.data.posts;
         setLikesCount(res.data.likes_count);
         addPostsToSection(posts, "history");
       }

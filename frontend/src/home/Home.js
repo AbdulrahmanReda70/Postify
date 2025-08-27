@@ -65,7 +65,7 @@ function Home() {
 
   function renderSearchInput() {
     return (
-      <div className='flex border-solid border-[1px] flex-row-reverse w-[230px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative'>
+      <div className='flex border-solid border-[1px] flex-row-reverse w-[240px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative'>
         <input
           onChange={handleSearch}
           placeholder='Search'
@@ -76,7 +76,7 @@ function Home() {
         {isVisible && (
           <div
             ref={searchRef}
-            className='absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[280px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20'
+            className='absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[240px] sm:w-[280px] md:w-[360px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20'
           >
             <h3 className='border-b-[1px] pb-1 mb-4 text-gray-400'>Posts</h3>
             {searchPosts.map((post, index) => {
@@ -121,7 +121,10 @@ function Home() {
       setLoading(true);
       let res = await api.get(`posts/home?page=${homeCurrentPage}`);
       if (!res.error) {
-        const posts = res.data.posts.data;
+        let posts = res.data.posts.data;
+        posts.forEach((post) => {
+          post.section = "home";
+        });
         const lastPage = res.data.posts.last_page;
 
         addPostsToSection(posts, "home");
