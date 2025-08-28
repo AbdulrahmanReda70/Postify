@@ -18,7 +18,7 @@ Currently in its early development stage.<br><br>
 
 
 
-<br><br>
+<br>
 
 ## Technologies Used
 
