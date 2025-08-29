@@ -12,11 +12,156 @@ Currently in its early development stage.<br><br>
 
 ## 📘 Table of Contents
 
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the Application](#running-the-application)
 - [Technologies Used](#technologies-used)
 - [Screenshots](#screenshots)
-- [Whats Next](#whats-next)
+- [What's Next](#whats-next)
 
 
+
+<br>
+
+## Getting Started
+
+### Prerequisites
+
+Before running this application, make sure you have the following installed:
+
+- **Docker** and **Docker Compose**
+- **Git** (for cloning the repository)
+- **Make** (for Linux/macOS users)
+- **PHP** and **Composer** (for dependency management)
+
+#### Platform-specific installation:
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install docker.io docker-compose make php-cli composer
+sudo usermod -aG docker $USER
+# Log out and log back in for group changes to take effect
+```
+
+**macOS:**
+```bash
+# Install Docker Desktop from https://docs.docker.com/desktop/mac/install/
+# Install Homebrew if you don't have it, then:
+brew install php composer
+# Make is pre-installed with Xcode Command Line Tools
+xcode-select --install  # if needed
+```
+
+**Windows:**
+- Download and install [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/install/)
+- Install [PHP](https://www.php.net/downloads) and [Composer](https://getcomposer.org/download/)
+- Enable WSL 2 backend for better performance
+
+### Installation & Setup
+
+#### Linux & macOS (One Command Setup)
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repository-url>
+   cd <repository-name>
+   ```
+
+2. **Run the complete setup:**
+   ```bash
+   make setup
+   ```
+   
+   This single command will:
+   - Copy `.env.example` to `.env` for both backend and frontend
+   - Install all Composer dependencies
+   - Generate Laravel application key
+   - Build and start all Docker containers
+
+3. **Access the application:**
+   - **Frontend (React):** http://localhost:3000
+   - **Backend (Laravel API):** http://localhost:8000
+
+That's it! The application should be running on both Linux and macOS.
+
+#### Windows (Manual Setup)
+
+1. **Clone the repository:**
+   ```cmd
+   git clone <your-repository-url>
+   cd <repository-name>
+   ```
+
+2. **Set up environment files:**
+   ```cmd
+   copy backend\.env.example backend\.env
+   copy frontend\.env.example frontend\.env
+   ```
+
+3. **Install dependencies:**
+   ```cmd
+   cd backend
+   composer install
+   php artisan key:generate
+   cd ..
+   ```
+
+4. **Start with Docker:**
+   ```cmd
+   docker compose up -d --build
+   ```
+
+5. **Access the application:**
+   - **Frontend (React):** http://localhost:3000
+   - **Backend (Laravel API):** http://localhost:8000
+
+### Managing the Application
+
+#### Stop the application:
+```bash
+docker compose down
+```
+
+#### View logs:
+```bash
+docker compose logs -f
+```
+
+#### Restart a specific service:
+```bash
+docker compose up -d --no-deps --force-recreate laravel-app
+```
+
+#### Available Make commands (Linux & macOS):
+```bash
+make setup              # Complete setup from scratch
+make docker             # Start Docker containers only
+make copy-backend-env   # Copy backend .env file
+make copy-frontend-env  # Copy frontend .env file
+make composer-install   # Install PHP dependencies
+make key-generate       # Generate Laravel app key
+```
+
+### Troubleshooting
+
+**Missing Make on Windows:**
+- Windows doesn't have `make` by default. Use the manual setup steps above.
+
+**Port conflicts:**
+- If ports 3000 or 8000 are already in use, modify them in `docker-compose.yml`
+
+**Permission issues (Linux):**
+- Ensure your user is in the docker group: `sudo usermod -aG docker $USER`
+- Log out and log back in
+
+**PHP/Composer not found (macOS):**
+- Install via Homebrew: `brew install php composer`
+
+**File upload/storage issues:**
+- Storage symlink is handled automatically via Docker volume mounts
+- Images are accessible at `http://localhost:8000/storage/...`
 
 <br>
 
