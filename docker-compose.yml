@@ -52,6 +52,8 @@ services:
       - DB_PASSWORD=
     volumes:
       - ./backend:/app
+      # Mount the public storage directory directly into the web root to avoid symlink issues with PHP's built-in server
+      - ./backend/storage/app/public:/app/public/storage
     command: sh -c "
       php artisan config:cache &&
       php artisan migrate --force &&

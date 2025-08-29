@@ -17,8 +17,8 @@ key-generate:
 docker:
 	docker compose up -d --build
 
-storage-link:
-	cd backend && php artisan storage:link
+# storage-link:
+# 	cd backend && php artisan storage:link
 
 # Fresh setup (install + key)
-setup: copy-backend-env copy-frontend-env composer-install key-generate docker storage-link
+setup: copy-backend-env copy-frontend-env composer-install key-generate docker
