@@ -52,7 +52,6 @@ services:
       - DB_PASSWORD=
     volumes:
       - ./backend:/app
-      - /app/public/storage
     command: sh -c "
       php artisan config:cache &&
       php artisan migrate --force &&
