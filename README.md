@@ -147,6 +147,17 @@ make composer-install   # Install PHP dependencies
 make key-generate       # Generate Laravel app key
 ```
 
+### Docker Containers Overview
+
+This application runs the following containers:
+
+| Container Name | Service | Port | Purpose |
+|----------------|---------|------|---------|
+| `react-app` | Frontend | 3000 | React development server |
+| `laravel-app` | Backend API | 8000 | Laravel PHP application |
+| `mariadb` | Database | 3306 | MySQL/MariaDB database |
+| `redis` | Cache | 6379 | Redis cache and sessions |
+
 ### Troubleshooting
 
 **Missing Make on Windows:**
