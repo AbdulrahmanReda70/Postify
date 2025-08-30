@@ -7,6 +7,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: react-app
     ports:
       - "3000:3000"
     volumes:
@@ -33,15 +34,27 @@ services:
       timeout: 5s
       retries: 10
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    networks:
+      - laravel-network
+    ports:
+      - "6379:6379"
+
   laravel-app:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: laravel-app
     ports:
       - "8000:8000"
     depends_on:
       mariadb:
         condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - laravel-network
     environment:
@@ -50,6 +63,8 @@ services:
       - DB_DATABASE=bitnami_myapp
       - DB_USERNAME=bn_myapp
       - DB_PASSWORD=
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - ./backend:/app
       # Mount the public storage directory directly into the web root to avoid symlink issues with PHP's built-in server
