@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Laravel Horizon Job Testing</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            .container {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .job-section {
+                margin: 20px 0;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+            .job-section h3 {
+                color: #555;
+                margin-top: 0;
+            }
+            button {
+                background-color: #007bff;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 5px;
+                font-size: 14px;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+            button:disabled {
+                background-color: #6c757d;
+                cursor: not-allowed;
+            }
+            .response {
+                margin-top: 10px;
+                padding: 10px;
+                background-color: #e9ecef;
+                border-radius: 3px;
+                font-family: monospace;
+                font-size: 12px;
+            }
+            .success {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .error {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            .info {
+                background-color: #e3f2fd;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            .horizon-link {
+                display: block;
+                text-align: center;
+                margin: 20px 0;
+                padding: 15px;
+                background-color: #28a745;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: bold;
+            }
+            .horizon-link:hover {
+                background-color: #218838;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 Laravel Horizon Job Testing</h1>
+
+            <div class="info">
+                <strong>📋 Instructions:</strong><br />
+                1. Make sure Laravel Horizon is running:
+                <code>php artisan horizon</code><br />
+                2. Open Horizon dashboard:
+                <a href="/horizon" target="_blank">Click here</a><br />
+                3. Click the buttons below to dispatch jobs<br />
+                4. Watch them process in real-time in Horizon!
+            </div>
+
+            <a href="/horizon" target="_blank" class="horizon-link">
+                📊 Open Laravel Horizon Dashboard
+            </a>
+
+            <div class="job-section">
+                <h3>🖼️ Image Processing Jobs</h3>
+                <p>
+                    Dispatches multiple image processing jobs with operations
+                    like resize, compress, watermark, and filter.
+                </p>
+                <button onclick="dispatchJob('image-processing')">
+                    Dispatch Image Processing Jobs
+                </button>
+                <div id="image-processing-response"></div>
+            </div>
+
+            <div class="job-section">
+                <h3>📧 Email Notification Jobs</h3>
+                <p>
+                    Dispatches email notifications with different priorities
+                    (high-priority and normal queues).
+                </p>
+                <button onclick="dispatchJob('email-notifications')">
+                    Dispatch Email Jobs
+                </button>
+                <div id="email-notifications-response"></div>
+            </div>
+
+            <div class="job-section">
+                <h3>🔄 Mixed Jobs</h3>
+                <p>
+                    Dispatches a combination of image processing and email
+                    notification jobs.
+                </p>
+                <button onclick="dispatchJob('mixed-jobs')">
+                    Dispatch Mixed Jobs
+                </button>
+                <div id="mixed-jobs-response"></div>
+            </div>
+
+            <div class="job-section">
+                <h3>⏰ Delayed Jobs</h3>
+                <p>
+                    Dispatches jobs with different delays (immediate, 30s, 1min,
+                    2min) to see scheduling in action.
+                </p>
+                <button onclick="dispatchJob('delayed-jobs')">
+                    Dispatch Delayed Jobs
+                </button>
+                <div id="delayed-jobs-response"></div>
+            </div>
+        </div>
+
+        <script>
+            // You'll need to get your auth token and API base URL
+            const API_BASE = "/api"; // Adjust this to your API base URL
+            let authToken = null;
+
+            // Simple function to get auth token (you can modify this based on your auth setup)
+            function getAuthToken() {
+                // For testing, you might want to manually set a token here
+                // or implement a login function
+                return (
+                    localStorage.getItem("auth_token") ||
+                    prompt("Enter your auth token:")
+                );
+            }
+
+            async function dispatchJob(jobType) {
+                if (!authToken) {
+                    authToken = getAuthToken();
+                    if (!authToken) {
+                        alert("Auth token is required");
+                        return;
+                    }
+                }
+
+                const button = event.target;
+                const responseDiv = document.getElementById(
+                    jobType + "-response"
+                );
+
+                button.disabled = true;
+                button.textContent = "Dispatching...";
+
+                try {
+                    const response = await fetch(
+                        `${API_BASE}/test-jobs/${jobType}`,
+                        {
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${authToken}`,
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                            },
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        responseDiv.innerHTML = `<div class="response success">✅ ${
+                            data.message
+                        }<br><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                    } else {
+                        responseDiv.innerHTML = `<div class="response error">❌ Error: ${
+                            data.message || "Unknown error"
+                        }</div>`;
+                    }
+                } catch (error) {
+                    responseDiv.innerHTML = `<div class="response error">❌ Network Error: ${error.message}</div>`;
+                } finally {
+                    button.disabled = false;
+                    button.textContent = button.textContent.replace(
+                        "Dispatching...",
+                        "Dispatch " +
+                            jobType
+                                .split("-")
+                                .map(
+                                    (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1)
+                                )
+                                .join(" ") +
+                            " Jobs"
+                    );
+                }
+            }
+
+            // Auto-refresh reminder
+            setInterval(() => {
+                console.log(
+                    "💡 Tip: Check the Horizon dashboard to see your jobs in action!"
+                );
+            }, 30000);
+        </script>
+    </body>
+</html>

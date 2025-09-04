@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Posts\PostCommentsController;
+use App\Http\Controllers\TestJobsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostInteractionController;
@@ -64,4 +65,12 @@ Route::get('/test', function () {
 Route::get('/test-s3', function () {
     $result = Storage::disk('s3')->put('test.txt', 'This is a test file.');
     return $result ? 'Success' : 'Failed';
+});
+
+// Test Job Routes (for testing Horizon)
+Route::middleware('auth:sanctum')->prefix('test-jobs')->group(function () {
+    Route::post('/image-processing', [TestJobsController::class, 'dispatchImageProcessing']);
+    Route::post('/email-notifications', [TestJobsController::class, 'dispatchEmailNotifications']);
+    Route::post('/mixed-jobs', [TestJobsController::class, 'dispatchMixedJobs']);
+    Route::post('/delayed-jobs', [TestJobsController::class, 'dispatchDelayedJobs']);
 });
