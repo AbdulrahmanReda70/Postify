@@ -1,9 +1,17 @@
-FROM node:18-alpine
+# Use Node.js base image
+FROM node:18
+
+# Set working directory
 WORKDIR /app
+
+# Copy only package.json first
 COPY package*.json ./
-RUN npm ci
-COPY . .
-EXPOSE 3000
+
+# Install deps inside container
+RUN npm install
+
+# Don’t copy source code here (local code will be mounted as a volume)
+# COPY . .
+
+# Start development server
 CMD ["npm", "start"]
-
-

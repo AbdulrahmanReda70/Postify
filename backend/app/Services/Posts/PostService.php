@@ -132,16 +132,21 @@ class PostService
 
     public function getHomePosts(?int $page = null)
     {
-        $home_posts = Post::getHomePosts();
+        $cacheKey = 'home_posts_page_' . ($page ?? 1);
+        $ttl = 60; // Cache for 60 seconds (adjust as needed)
 
-        // Cast to LengthAwarePaginator to access getCollection and setCollection methods
-        /** @var \Illuminate\Pagination\LengthAwarePaginator $home_posts */
-        $posts = $home_posts->getCollection()->slice(1)->values();
-        foreach ($posts as $p) {
-            $p['canUpdate'] = Gate::allows('canEdit', $p); // TODO: Remove this
-        }
+        return \Cache::remember($cacheKey, $ttl, function () {
+            $home_posts = Post::getHomePosts();
 
-        return $home_posts->setCollection($posts);
+            // Cast to LengthAwarePaginator to access getCollection and setCollection methods
+            /** @var \Illuminate\Pagination\LengthAwarePaginator $home_posts */
+            $posts = $home_posts->getCollection()->slice(1)->values();
+            foreach ($posts as $p) {
+                $p['canUpdate'] = Gate::allows('canEdit', $p); // TODO: Remove this
+            }
+
+            return $home_posts->setCollection($posts);
+        });
     }
 
     public function updatePost(UpdatePostRequest $request, Post $post): Post
