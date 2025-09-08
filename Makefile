@@ -15,7 +15,7 @@ key-generate:
 	cd backend && php artisan key:generate
 
 docker:
-	docker compose up -d --build
+	docker compose --env-file ./backend/.env up -d
 
 # storage-link:
 # 	cd backend && php artisan storage:link
