@@ -9,6 +9,8 @@ use App\Jobs\DeletePost;
 use App\Jobs\UpdatePost;
 use App\Models\CommentReaction;
 use App\Models\Post;
+use App\Notifications\NewMessageNotification;
+use App\Notifications\WelcomeMessageNotification;
 use Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -134,6 +136,9 @@ class PostService
     {
         $cacheKey = 'home_posts_page_' . ($page ?? 1);
         $ttl = 60; // Cache for 60 seconds (adjust as needed)
+
+        Auth::user()->notify(new WelcomeMessageNotification('Welcome to our platform, '  . '! We are excited to have you on board.'));
+
 
         return \Cache::remember($cacheKey, $ttl, function () {
             $home_posts = Post::getHomePosts();

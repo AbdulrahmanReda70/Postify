@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../images/feather.png";
 
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Outlet, useLocation } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { getUserInfo } from "../api/authService";
+import { useNotifications } from "../context/NotificationsContext";
 const { Disclosure, DisclosureButton, DisclosurePanel } = await import(
   "@headlessui/react"
 );
@@ -40,6 +41,8 @@ function classNames(...classes) {
 }
 
 function Navbar() {
+  const { unreadCount } = useNotifications();
+
   const location = useLocation();
   return (
     <>
@@ -124,8 +127,12 @@ function Navbar() {
                   >
                     <span className='absolute -inset-1.5' />
                     <span className='sr-only'>View notifications</span>
-
                     <BellIcon aria-hidden='true' className='size-6' />
+                    {unreadCount > 0 && (
+                      <span className='absolute -top-1 -right-1 inline-flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5 min-w-[18px] h-[18px]'>
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    )}
                   </Link>
 
                   {/* Profile dropdown */}
@@ -223,6 +230,11 @@ function Navbar() {
                   <span className='absolute -inset-1.5' />
                   <span className='sr-only'>View notifications</span>
                   <BellIcon aria-hidden='true' className='size-6' />
+                  {unreadCount > 0 && (
+                    <span className='absolute -top-1 -right-1 inline-flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5 min-w-[18px] h-[18px]'>
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
                 </Link>
               </div>
               <div className='mt-3 space-y-1 px-2'>

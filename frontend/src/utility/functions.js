@@ -5,7 +5,7 @@ export function get_pathname() {
 }
 
 export function displayDate(date) {
-  let d = new Date("2025-02-12T20:12:27.000000Z");
+  let d = new Date(date);
   return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",

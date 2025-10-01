@@ -1,13 +1,17 @@
 <?php
 
+use App\Events\NewNotification;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Notifications\NotificationController;
 use App\Http\Controllers\Posts\PostCommentsController;
 use App\Http\Controllers\TestJobsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Posts\PostController;
 use App\Http\Controllers\Posts\PostInteractionController;
 use App\Http\Controllers\User\ProfileController;
+
+// Broadcast routes are registered in App\Providers\BroadcastServiceProvider
 
 // Public Auth Routes
 Route::post('/register', [RegisterController::class, 'register']);
@@ -73,4 +77,11 @@ Route::middleware('auth:sanctum')->prefix('test-jobs')->group(function () {
     Route::post('/email-notifications', [TestJobsController::class, 'dispatchEmailNotifications']);
     Route::post('/mixed-jobs', [TestJobsController::class, 'dispatchMixedJobs']);
     Route::post('/delayed-jobs', [TestJobsController::class, 'dispatchDelayedJobs']);
+});
+
+Route::middleware('auth:sanctum')->prefix('/notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/unread-count', [NotificationController::class, 'unReadCount']);
+    Route::patch('/{id}', [NotificationController::class, 'markAsRead']);
+    Route::delete('/{id}', [NotificationController::class, 'destroy']);
 });

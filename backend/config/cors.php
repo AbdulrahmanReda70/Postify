@@ -1,6 +1,6 @@
-    <?php
+<?php
 
-    /*
+/*
         |--------------------------------------------------------------------------
         | Cross-Origin Resource Sharing (CORS) Configuration
         |--------------------------------------------------------------------------
@@ -12,14 +12,24 @@
         | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
         |
         */
-    return [
-        'paths' => ['api/*', 'sanctum/csrf-cookie', 'googleAuth', 'auth/*'],
-        'allowed_methods' => ['*'],
-        // Do not use '*' when supports_credentials is true
-        'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://d116q68nntzqo2.cloudfront.net'],
-        'allowed_headers' => ['*'],
-        'exposed_headers' => [],
-        'max_age' => 0,
-        'supports_credentials' => true,
+return [
+    'paths' => [
+        'api/*',
+        'sanctum/csrf-cookie',
+        'broadcasting/auth',
+    ],
 
-    ];
+    'allowed_methods' => ['*'],
+
+    'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://d116q68nntzqo2.cloudfront.net'],
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => true,
+];

@@ -3,6 +3,7 @@
 namespace App\Services\Users;
 
 use App\Models\User;
+use App\Notifications\WelcomeMessageNotification;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -20,7 +21,7 @@ class UserAuthService
 
     public function login(array $credentials): ?array
     {
-        $user = User::where('email', $credentials['email'])->first();
+        $user = User::where('email', operator: $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return null;
@@ -76,6 +77,8 @@ class UserAuthService
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        $user->notify(new WelcomeMessageNotification('Welcome to our platform, ' . $user->email . '! We are excited to have you on board.'));
 
         return [
             'message' => 'User registered',

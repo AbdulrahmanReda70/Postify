@@ -3,6 +3,7 @@ import "./tailwind.css";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import { PostsProvider } from "./context/PostsContext";
+import { NotificationsProvider } from "./context/NotificationsContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ValidTokenContext from "./context/ValidTokenContext";
 import {
@@ -27,7 +28,9 @@ root.render(
       <PostsProvider>
         <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
           <ValidTokenContext>
-            <App />
+            <NotificationsProvider>
+              <App />
+            </NotificationsProvider>
           </ValidTokenContext>
         </GoogleOAuthProvider>
       </PostsProvider>
