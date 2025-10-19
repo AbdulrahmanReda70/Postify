@@ -5,6 +5,7 @@ let apiUrl = process.env.REACT_APP_API_URL;
 function Protected() {
   const token = localStorage.getItem("auth_token");
   const { isValid, setIsValid } = useIsValidToken();
+  console.log("BEFORE");
 
   useEffect(() => {
     const validateToken = async () => {
@@ -14,6 +15,8 @@ function Protected() {
       }
 
       try {
+        console.log("error");
+
         const response = await fetch(`${apiUrl}auth/validate`, {
           headers: {
             "Content-Type": "application/json",

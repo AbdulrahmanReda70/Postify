@@ -19,9 +19,9 @@ function PostCreate() {
   const nav = useNavigate();
   async function handlePostPublish() {
     if (isLoading) return; // Prevent multiple submissions
-    
+
     setIsLoading(true);
-    
+
     try {
       const formData = new FormData();
       formData.append("title", title);
@@ -40,7 +40,12 @@ function PostCreate() {
       }
       setIs_open(true);
     } catch (error) {
-      setRes({ error: true, message: "Failed to create post. Please try again." });
+      console.log(error, "++++");
+
+      setRes({
+        error: true,
+        message: error.message || "Failed to create post. Please try again.",
+      });
       setIs_open(true);
     } finally {
       setIsLoading(false);
@@ -51,9 +56,11 @@ function PostCreate() {
     <div>
       <AlertPopup is_open={is_open} setIs_open={setIs_open} status={res} />
       <div className='container-c'>
-        <label className={`flex items-center justify-center w-60 h-14 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg hover:border-blue-500 transition duration-300 ${
-          isLoading ? 'opacity-50 cursor-not-allowed' : ''
-        }`}>
+        <label
+          className={`flex items-center justify-center w-60 h-14 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg hover:border-blue-500 transition duration-300 ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
           <span className='text-white'>Upload Image</span>
           <input
             type='file'
@@ -69,9 +76,7 @@ function PostCreate() {
           onClick={handlePostPublish}
           disabled={isLoading}
           className={`bg-green flex items-center justify-center ml-auto mb-5 px-6 py-2 rounded transition duration-200 ${
-            isLoading 
-              ? 'opacity-70 cursor-not-allowed' 
-              : 'hover:bg-green-600'
+            isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-green-600"
           }`}
         >
           {isLoading ? (
@@ -99,7 +104,7 @@ function PostCreate() {
               Publishing...
             </>
           ) : (
-            'Publish'
+            "Publish"
           )}
         </button>
         <div>
@@ -109,7 +114,7 @@ function PostCreate() {
             placeholder='Title'
             disabled={isLoading}
             className={`w-[600px] h-[100px] text-4xl mb-[30px] pb-[20px] ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           />
         </div>
@@ -117,7 +122,7 @@ function PostCreate() {
           {preview && (
             <img
               className={`h-[500px] w-[100%] rounded object-cover ${
-                isLoading ? 'opacity-70' : ''
+                isLoading ? "opacity-70" : ""
               }`}
               src={preview}
               alt='img'
@@ -132,7 +137,7 @@ function PostCreate() {
             placeholder='Tell Your Story'
             disabled={isLoading}
             className={`w-[600px] mb-80 text-2xl ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           />
         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Services\Posts\PostInteractionsService;
@@ -24,7 +25,7 @@ class PostCommentsController extends Controller
         $comment = $service->createComment($data, $post);
 
         return response()->json([
-            'comment' => $comment,
+            'comment' => new CommentResource($comment),
         ], 201); // 201 for resource created
     }
 

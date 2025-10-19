@@ -17,7 +17,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request, PostService $postService)
     {
-        // dispatch_sync(CreatePost::fromRequest($request));
+
         $post = $postService->createPost($request);
         return response()->json([
             'message' => 'Post created successfully!',
@@ -99,7 +99,7 @@ class PostController extends Controller
     // TODO: use Laravel Scout instead of this
     public function postSearch(PostService $postService)
     {
-        $query = request()->input('query') || '';
+        $query = request('query', '');
         $posts = $postService->searchPosts($query);
 
         return response()->json($posts); // Return JSON response

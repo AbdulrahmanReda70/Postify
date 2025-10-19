@@ -2,7 +2,6 @@
 
 namespace App\Services\Posts;
 
-use App\Events\PostPublished;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Jobs\DeletePost;
@@ -10,8 +9,10 @@ use App\Jobs\UpdatePost;
 use App\Models\CommentReaction;
 use App\Models\Post;
 use App\Notifications\NewMessageNotification;
+use App\Notifications\PostPublished;
 use App\Notifications\WelcomeMessageNotification;
 use Auth;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
@@ -64,6 +65,10 @@ class PostService
             'body' => $request->body,
             'image' => $imagePath,
         ]);
+        $user = Auth::user();
+        $user->notify(new PostPublished(
+            "Your post has been successfully published! 🎉"
+        ));
         event(new PostPublished($post));
         return $post;
     }
@@ -137,9 +142,6 @@ class PostService
         $cacheKey = 'home_posts_page_' . ($page ?? 1);
         $ttl = 60; // Cache for 60 seconds (adjust as needed)
 
-        Auth::user()->notify(new WelcomeMessageNotification('Welcome to our platform, '  . '! We are excited to have you on board.'));
-
-
         return \Cache::remember($cacheKey, $ttl, function () {
             $home_posts = Post::getHomePosts();
 
@@ -169,6 +171,7 @@ class PostService
 
     public function searchPosts(string $query, int $perPage = 10)
     {
+        Logger($query);
         return Post::where('title', 'LIKE', "%{$query}%")
             ->orWhere('body', 'LIKE', "%{$query}%")
             ->paginate($perPage);

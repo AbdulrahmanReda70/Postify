@@ -65,36 +65,49 @@ function Home() {
 
   function renderSearchInput() {
     return (
-      <div className='flex border-solid border-[1px] flex-row-reverse w-[240px] h-[40px] items-center gap-x-2 pl-4 rounded-full relative'>
-        <input
-          onChange={handleSearch}
-          placeholder='Search'
-          className='border-none w-[100%] h-[100%] mb-0 outline-none'
-          autoComplete='off'
-        />
-        <CiSearch className='text-gray-400 size-5' />
+      <div className='relative w-full max-w-md mb-[40px]'>
+        {/* Input container */}
+        <div
+          className='flex items-center bg-[#1e1e1f] border border-gray-700 rounded-2xl px-3 py-1
+                      hover:border-gray-500 focus-within:border-blue-500 transition-all duration-200 shadow-sm '
+        >
+          <CiSearch className='text-gray-400 size-5 mr-2' />
+          <input
+            onChange={handleSearch}
+            placeholder='Search'
+            className='bg-transparent border-none w-full outline-none text-gray-200 placeholder-gray-500 !mb-0'
+            autoComplete='off'
+          />
+        </div>
+
+        {/* Dropdown results */}
         {isVisible && (
           <div
             ref={searchRef}
-            className='absolute custom-scroll-bar scrollbar-hidden overflow-auto p-3 pt-5 shadow-lg shadow-black bottom-[-11px] left-0 w-[240px] sm:w-[280px] md:w-[360px] h-[300px] bg-primary translate-y-[100%] rounded-sm z-20'
+            className='absolute top-full mt-2 left-0 right-0 custom-scroll-bar scrollbar-hidden
+                     overflow-auto p-3 opacity-[97%] max-h-[310px] rounded-2xl z-20
+                     bg-[#1e1e1f] border border-gray-700 shadow-lg'
           >
-            <h3 className='border-b-[1px] pb-1 mb-4 text-gray-400'>Posts</h3>
-            {searchPosts.map((post, index) => {
-              return (
+            {searchPosts.length > 0 ? (
+              searchPosts.map((post, index) => (
                 <Link
                   to={`/view/${post.id}`}
                   key={index}
-                  className='flex gap-2 items-center mb-4'
+                  className='flex gap-3 items-center mb-2 hover:bg-[#414140] p-2 rounded-lg transition'
                 >
                   <img
                     src={post.image_url}
                     alt=''
-                    className='rounded-full w-6 h-6'
+                    className='rounded min-6 w-6  h-6'
                   />
-                  <div>{post.title}</div>
+                  <div className='text-gray-200'>{post.title}</div>
                 </Link>
-              );
-            })}
+              ))
+            ) : (
+              <div className='text-gray-400 text-center py-10'>
+                No results found
+              </div>
+            )}
           </div>
         )}
       </div>

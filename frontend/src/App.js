@@ -7,7 +7,6 @@ import Protected from "./components/Protected";
 import GoogleCallback from "./auth/GoogleCallback";
 import VisitedUser from "./user/VisitedUser";
 import { Suspense, lazy, useEffect } from "react";
-import Test from "./pages/Test";
 
 // Lazy-loaded components
 const History = lazy(() => import("./myPosts/history/History"));
@@ -34,9 +33,7 @@ function App() {
           left: "50%",
           transform: "translate(-50%,-50%)",
         }}
-      >
-        Loading...
-      </div>
+      ></div>
     );
   }
 
@@ -45,7 +42,6 @@ function App() {
       <Suspense fallback={<SuspenseLoading />}>
         <Routes>
           <Route path='/auth/google' element={<GoogleCallback />} />
-          <Route path='/t' element={<Test />} />
           <Route element={<Protected />}>
             <Route element={<Navbar />}>
               <Route path='/user/:visitedUserId' element={<VisitedUser />} />

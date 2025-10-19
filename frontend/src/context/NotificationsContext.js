@@ -42,8 +42,9 @@ export function NotificationsProvider({ children }) {
     if (userString) {
       try {
         const user = JSON.parse(userString);
+        console.log(user);
+
         userId = user?.id;
-        console.log("Authenticated user ID:", userId);
       } catch (error) {
         console.error("Failed to parse user data:", error);
       }
@@ -55,18 +56,28 @@ export function NotificationsProvider({ children }) {
     }
 
     // Subscribe to the private channel
-    const channel = pusher.subscribe(`private-user.${userId}`);
+    const privateChannel = pusher.subscribe(`private-user.${userId}`);
 
     // Bind to the event name defined in broadcastAs()
-    channel.bind("WelcomeNotification", (data) => {
+    privateChannel.bind("UserNotification", (data) => {
       console.log("New notification received:", data);
       // Add the new notification to the state
       setNotifications((prev) => [data, ...prev]);
     });
 
+    // Subscribe to public offers channel
+    const publicChannel = pusher.subscribe("offers");
+
+    publicChannel.bind("UserNotification", (data) => {
+      console.log("📰 New public offer:", data);
+      setNotifications((prev) => [data, ...prev]);
+    });
+
     return () => {
-      channel.unbind_all();
-      channel.unsubscribe();
+      privateChannel.unbind_all();
+      privateChannel.unsubscribe();
+      publicChannel.unbind_all();
+      publicChannel.unsubscribe();
     };
   }, []);
 

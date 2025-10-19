@@ -2,20 +2,24 @@
 
 namespace App\Notifications;
 
-use Auth;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeMessageNotification extends Notification
+class Ads extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected $message) {}
+    public function __construct(private $message)
+    {
+        //
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -24,7 +28,7 @@ class WelcomeMessageNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['broadcast', 'database'];
+        return ['database', 'broadcast'];
     }
 
     public function toBroadcast($notifiable)
@@ -41,7 +45,7 @@ class WelcomeMessageNotification extends Notification
     {
         // Private channel - only the authenticated user can listen
         // Do not include the 'private-' prefix here; the PrivateChannel class adds it for transport.
-        return new PrivateChannel(name: 'user.' . Auth::id()); // channel name
+        return new Channel('offers'); // channel name
 
         // Public channel example:
         // Anyone can listen to this channel without authentication
@@ -55,8 +59,10 @@ class WelcomeMessageNotification extends Notification
         return 'UserNotification'; // event name use it in frontend to listen to it
     }
 
+
     /**
      * Get the array representation of the notification.
+     *
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array

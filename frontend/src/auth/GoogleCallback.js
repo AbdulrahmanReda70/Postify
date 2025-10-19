@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveUserInfo } from "../api/authService";
+import logo from "../images/leaf.png";
 
 function GoogleCallback() {
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,6 @@ function GoogleCallback() {
       localStorage.setItem("auth_token", data.access_token);
       saveUserInfo(data.user);
       nav("/", { replace: true });
-      window.location.reload();
     } else {
       return <div>Some thing went wrong</div>;
     }
@@ -45,8 +45,7 @@ function DisplayLoading() {
   return (
     <div className='flex justify-center items-center h-screen bg-primary text-white'>
       <div className='flex flex-col items-center gap-4'>
-        <div className='animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid'></div>
-        <p className='text-lg font-semibold'>Loading...</p>
+        <img src={logo} className='size-11 mb-[5px]' />{" "}
       </div>
     </div>
   );

@@ -5,17 +5,22 @@ namespace App\Notifications;
 use Auth;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeMessageNotification extends Notification
+class PostPublished extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected $message) {}
+    public function __construct(private $message)
+    {
+        //
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -24,7 +29,7 @@ class WelcomeMessageNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['broadcast', 'database'];
+        return ['database', 'broadcast'];
     }
 
     public function toBroadcast($notifiable)
@@ -55,8 +60,10 @@ class WelcomeMessageNotification extends Notification
         return 'UserNotification'; // event name use it in frontend to listen to it
     }
 
+
     /**
      * Get the array representation of the notification.
+     *
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array

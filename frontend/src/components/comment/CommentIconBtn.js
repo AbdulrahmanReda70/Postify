@@ -8,6 +8,12 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions"; // MUI emoji 
 
 function CommentIconBtn({ handleAction }) {
   const icons = ["👍", "👎", "❤️", "🎉"];
+  // Dark theme colors
+  const darkBg = "#222831";
+  const darkHover = "#393e46";
+  const darkMenuBg = "#23272f";
+  const darkMenuItemHover = "#393e46";
+  const darkIconColor = "#ffd369";
 
   return (
     <Dropdown>
@@ -20,16 +26,18 @@ function CommentIconBtn({ handleAction }) {
             size: "sm",
             sx: {
               borderRadius: "50%",
-              backgroundColor: "rgba(0, 0, 0, 0.05)",
+              backgroundColor: darkBg,
               marginBottom: "5px",
+              color: darkIconColor,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
               "&:hover": {
-                backgroundColor: "rgba(25, 118, 210, 0.1)",
+                backgroundColor: darkHover,
               },
             },
           },
         }}
       >
-        <EmojiEmotionsIcon fontSize='small' />
+        <EmojiEmotionsIcon fontSize='small' sx={{ color: darkIconColor }} />
       </MenuButton>
 
       <Menu
@@ -38,6 +46,8 @@ function CommentIconBtn({ handleAction }) {
           flexDirection: "row",
           padding: "5px",
           gap: "4px",
+          backgroundColor: darkMenuBg,
+          boxShadow: "0 2px 12px rgba(0,0,0,0.25)",
         }}
       >
         {icons.map((icon, index) => (
@@ -48,8 +58,10 @@ function CommentIconBtn({ handleAction }) {
               fontSize: "13px",
               borderRadius: "8px",
               padding: "5px 10px",
+              backgroundColor: darkMenuBg,
+              color: darkIconColor,
               "&:hover": {
-                backgroundColor: "rgba(25, 118, 210, 0.1)",
+                backgroundColor: darkMenuItemHover,
               },
             }}
           >

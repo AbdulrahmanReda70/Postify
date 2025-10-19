@@ -44,7 +44,6 @@ function SignUp() {
     }
 
     nav("/", { replace: true });
-    window.location.reload();
   }
 
   return (

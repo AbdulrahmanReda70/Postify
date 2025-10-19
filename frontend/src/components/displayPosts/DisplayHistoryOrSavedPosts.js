@@ -93,7 +93,7 @@ function DisplayHistoryOrSavedPosts({ loading, pageTitle, type }) {
                             <DisplayUser post={post} />
                           )}
 
-                          <h1 className='text-2xl font-bold'>{title}</h1>
+                          <h1 className='text-lg font-bold'>{title}</h1>
                         </div>
 
                         <div className='flex  mb-[10px] gap-x-[20px] items-center'>

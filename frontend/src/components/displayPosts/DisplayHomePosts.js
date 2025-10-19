@@ -12,8 +12,6 @@ function DisplayHomePosts({ pageTitle }) {
 
   // ------------------ Components & Functions ------------------
 
-  console.log("allPosts allPosts", allPosts);
-
   async function handleSavePost(e, post) {
     console.log(post);
 
@@ -105,7 +103,7 @@ function DisplayHomePosts({ pageTitle }) {
                       <div className='w-[100%] flex flex-col justify-center gap-y-[12px]'>
                         <div>
                           {user && <DisplayUser user={user} />}
-                          <h1 className='text-2xl font-bold'>{title}</h1>
+                          <h1 className='text-lg font-bold'>{title}</h1>
                         </div>
 
                         <div className='flex mb-[10px] gap-x-[20px] items-center'>

@@ -71,7 +71,7 @@ class UserAuthService
             'username' => $username,
             'email' => $email,
             'password' => Hash::make($data['password']),
-            'user_role' => 'admin',
+            'user_role' => 'user',
             'avatar' => $avatarUrl,
             'gender' => $gender,
         ]);

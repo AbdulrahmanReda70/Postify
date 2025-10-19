@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "../images/feather.png";
+import logo from "../images/leaf.png";
 
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Outlet, useLocation } from "react-router";
@@ -12,13 +12,6 @@ const { Disclosure, DisclosureButton, DisclosurePanel } = await import(
 const { Menu, MenuButton, MenuItem, MenuItems } = await import(
   "@headlessui/react"
 );
-const userL = getUserInfo();
-
-const user = {
-  name: userL?.username,
-  email: userL?.email,
-  imageUrl: userL?.avatar,
-};
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -41,6 +34,8 @@ function classNames(...classes) {
 }
 
 function Navbar() {
+  const userL = getUserInfo();
+  const [user] = useState(userL || {});
   const { unreadCount } = useNotifications();
 
   const location = useLocation();
@@ -143,7 +138,7 @@ function Navbar() {
                         <span className='sr-only'>Open user menu</span>
                         <img
                           alt=''
-                          src={user.imageUrl}
+                          src={user.avatar}
                           className='size-8 mt-2 rounded-full'
                         />
                       </MenuButton>
@@ -210,13 +205,13 @@ function Navbar() {
                 <div className='shrink-0'>
                   <img
                     alt=''
-                    src={user.imageUrl}
+                    src={user.avatar}
                     className='size-10 rounded-full'
                   />
                 </div>
                 <div className='ml-3'>
                   <div className='text-base/5 font-medium text-white'>
-                    {user.name}
+                    {user.username}
                   </div>
                   <div className='text-sm font-medium text-gray-400'>
                     {user.email}

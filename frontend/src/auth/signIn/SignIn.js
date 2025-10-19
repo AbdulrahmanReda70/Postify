@@ -33,7 +33,6 @@ function SignIn() {
     }
     saveUserInfo(data.user);
     nav("/", { replace: true });
-    window.location.reload();
   }
 
   return (

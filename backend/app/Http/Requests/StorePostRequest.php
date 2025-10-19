@@ -22,9 +22,9 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'min:5',
+            'title' => 'min:5|max:200',
             'body' => 'min:20',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3048', // 3MB max size
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048', // 4MB max size
         ];
     }
 }

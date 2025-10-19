@@ -3,6 +3,7 @@
 use App\Events\NewNotification;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\FireController;
 use App\Http\Controllers\Notifications\NotificationController;
 use App\Http\Controllers\Posts\PostCommentsController;
 use App\Http\Controllers\TestJobsController;
@@ -85,3 +86,5 @@ Route::middleware('auth:sanctum')->prefix('/notifications')->group(function () {
     Route::patch('/{id}', [NotificationController::class, 'markAsRead']);
     Route::delete('/{id}', [NotificationController::class, 'destroy']);
 });
+
+Route::post('/fire', [FireController::class, 'sendAds']);
