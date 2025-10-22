@@ -38,13 +38,13 @@ export function NotificationsProvider({ children }) {
   useEffect(() => {
     const userString = localStorage.getItem("user");
     let userId = null;
+    console.log("UU", userString);
 
     if (userString) {
       try {
         const user = JSON.parse(userString);
         console.log(user);
-
-        userId = user?.id;
+        userId = user?.user_id || user?.id;
       } catch (error) {
         console.error("Failed to parse user data:", error);
       }

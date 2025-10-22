@@ -3,7 +3,7 @@ import Pusher from "pusher-js";
 
 const pusher = new Pusher("d00e6779a30dbba68e0f", {
   cluster: "eu",
-  authEndpoint: "http://localhost:8000/broadcasting/auth",
+  authEndpoint: process.env.REACT_APP_AUTH_END_POINT,
   auth: {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("auth_token")}`,

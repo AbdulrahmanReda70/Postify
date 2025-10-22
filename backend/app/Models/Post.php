@@ -29,15 +29,8 @@ class Post extends Model
             return null;
         }
 
-        // Always use public disk for URL generation since that's web-accessible
-        $url = Storage::disk('public')->url($this->image);
-
-        // If URL is relative (starts with /), make it absolute
-        if (str_starts_with($url, '/')) {
-            return config('app.url') . $url;
-        }
-
-        return $url;
+        // Use the default disk (which should be s3 in production)
+        return Storage::disk(config('filesystems.default'))->url($this->image);
     }
 
     public function user()
