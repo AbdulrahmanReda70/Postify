@@ -28,7 +28,6 @@ class Post extends Model
         if (!$this->image) {
             return null;
         }
-
         // Use the default disk (which should be s3 in production)
         return Storage::disk(config('filesystems.default'))->url($this->image);
     }
